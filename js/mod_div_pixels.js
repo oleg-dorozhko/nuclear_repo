@@ -182,7 +182,7 @@ function setEventListenersOnTri_Btns()
 			
 			if(num_dif_colors>0)
 			{
-				alert('Collect all plutonium before. Beware!');
+				alert('Collect all plutonium before. Beware!\n...and tickle my little belly. Do not forget.');
 				return;
 			}
 			

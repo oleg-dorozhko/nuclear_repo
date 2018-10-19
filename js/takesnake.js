@@ -238,10 +238,15 @@ function whenBrakabakaEventOccurs(e)
 		
 		if( (bgcolor[0]==_color[0]) && (bgcolor[1]==_color[1]) && (bgcolor[2]==_color[2]) && (bgcolor[3]==_color[3]) ) 
 		{
-			repeat();
-			labirint(x,y);
 			
-			return;
+			if((global_cliked_points_array.length==0)&&(global_do_work==false))
+			{
+				global_do_work=true;
+				repeat();
+				labirint(x,y);
+				
+				return;
+			}
 			
 		}
 		
