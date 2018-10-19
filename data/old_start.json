@@ -1,0 +1,14 @@
+{ 
+	
+	
+	"imageUrl": "images/patterns/pattern_6.png", 
+
+	"next": [
+	
+       { "conf":[35,45,46,55],"json": "data/pattern_7.json"},
+	   
+       { "conf":[35,45,46,58], "json": "data/pattern_8.json"}
+	   
+    ]
+
+}

@@ -1,0 +1,14 @@
+{ 
+	"order": [20,30,40],
+	
+	"imageUrl": "images/patterns/pattern_7.png", 
+
+	"next": [
+	
+       { "conf":[],"json": "data/pattern_6.json"},
+	   
+       { "conf":[], "json": "data/pattern_8.json"}
+	   
+    ]
+
+}

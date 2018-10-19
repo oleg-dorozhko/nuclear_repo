@@ -1,0 +1,15 @@
+{ 
+	
+	"folder": "dov",
+	
+	"name": "pattern_6", 
+	
+	"keys": [
+	
+       { "key":[35,45,46,55],"name": "pattern_7"},
+	   
+       { "key":[35,45,46,58], "name": "pattern_8"}
+	   
+    ]
+
+}

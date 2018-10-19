@@ -1,0 +1,17 @@
+{ 
+	
+	"folder": "zastavka",
+	
+	"name": "zastavka", 
+	
+	"password": "1",
+	
+	"keys": [
+	
+       { "key":[19,20,21,22,23,24,25], "folder":"pattern_31", "name": "pattern_31", "password":"1" }
+	   
+     
+	   
+    ]
+
+}

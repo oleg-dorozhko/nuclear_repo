@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-82642367-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-82642367-2');
+</script>
+<title>Colors Game</title>
+<meta charset='utf-8'>
+<link rel='stylesheet' href='css/styles.css'>
+<link rel='stylesheet' href='css/modalw.css'>
+<script src="js/takesnake.js"></script>
+<script src="js/mod_color_picker.js"></script>
+<script src="js/mod_pixel_editor.js"></script>
+<script src="js/mod_snake_pro.js"></script>
+<script src="js/mod_obhod_one_color.js"></script>
+<script src="js/mod_modal_window.js"></script>
+<script src="js/mod_colors.js"></script>
+<script src="js/mod_warp.js"></script>
+<script src="js/brainlock.js"></script>
+<script src="js/mod_server_queries.js"></script>
+<script src="js/mod_change_claster_color.js"></script>
+<script src="js/mod_checkers.js"></script>
+<script src="js/mod_game.js"></script>
+<script src="js/mod_move.js"></script>
+<script src="js/mod_pixels.js"></script>
+<script src="js/mod_ctrl_z.js"></script>
+<script src="js/mod_help.js"></script>
+<script src="js/mod_xfactor.js"></script>
+<script src="js/mod_sorcery.js"></script>
+<script src="js/mod_draw.js"></script>
+<script src="js/mod_base.js"></script>
+<script src="js/mod_labirint.js"></script>
+<script src="js/mod_div_pixels.js"></script>
+<script src="js/mod_keyboard.js"></script>
+<script src="js/mod_dummy_fast_thread.js"></script>
+<script src="js/mod_define_cluster.js"></script>
+<script src="js/mod_return_cluster.js"></script>
+<script src="js/mod_join_cluster.js"></script>
+<script src="js/mod_matrix_ai.js"></script>
+<script src="js/mod_select_cluster.js"></script>
+<script src="js/mod_remove_cluster.js"></script>
+<script src="js/mod_split_cluster.js"></script>
+<!----
+<script src="js/mod_pixels.js"></script>
+---->
+<script src="js/mod_compare.js"></script>
+<script src="js/mod_take_off.js"></script>
+<script src="js/mod_image_pasting.js"></script>
+
+</head>
+<body>
+<div id='controls' style='display:none;'>
+<div class='btn'><canvas id='max'></canvas></div>
+<div class='btn'><canvas id='min'></canvas></div>
+<div class='btn'><canvas id='save'></canvas></div>
+<div class='btn'><canvas id='more'></canvas></div>
+<div class='btn'><canvas id='less'></canvas></div>
+<div class='btn'><canvas id='left'></canvas></div>
+<div class='btn'><canvas id='start'></canvas></div>
+<div class='btn'><canvas id='up'></canvas></div>
+<div class='btn'><canvas id='down'></canvas></div>
+<div class='btn'><canvas id='right'></canvas></div>
+
+
+<div class='btn' hidden><canvas id='remove'></canvas></div>
+
+<!----
+<div class='btn'><canvas id='p1'></canvas></div>
+<div class='btn'><canvas id='p2'></canvas></div>
+<div class='btn'><canvas id='p3'></canvas></div>
+---->
+</div>
+<div id='moves' ></div>
+<div style='display:none'>
+<input type="radio" class="qwe" name="mode" id="take" value="take"> Take 
+<input type="radio"  class="qwe"  name="mode" id="snake" value="snake" checked> Take Off  
+<input type="radio"  class="qwe"  name="mode" id="join" value="join" > Fill 
+<input type="radio"  class="qwe"  name="mode" id="split" value="split" > Return 
+</div>
+
+<div style='display:none'>Cell size: <select id="cell_size" hidden><option value="1" selected >1</option><option value="2" >2</option><option value="3" >3</option><option value="4" >4</option><option value="5" >5</option><option value="8" >8</option><option value="16" >16</option><option value="24">24</option></select>
+<input type="button" value="set" onclick="update()">
+<input type="checkbox" id='save_on' checked>
+<!--<input type="button" value="save" onclick="save()">-->
+
+</div>
+<div id='container0'>
+<div id='item0'><canvas id="canvas0"></canvas></div>
+<div id='item7'><canvas id="canvas7" style='display:none;'></canvas></div>
+
+
+<div id="scale_div" class="flex-item draggable"  hidden >	
+			
+				<div ><span id="canvas_width_height">:: 264 x 264 :: </span><span id="selected_x_y">170, 31 ::</span></div>
+					<div style="visibility: hidden; display: none;" id="pixels_buttons">
+					
+					<input type="button" id="btn_lt" value=" LT ">
+					<input type="button" id="btn_rb" value=" RB ">
+					<input type="button" id="btn_esc" value=" X ">
+					
+					</div> 
+					
+				<div class="flex-container" ><canvas id="pixels" width="150" height="150" style="cursor:crosshair;border: 1px solid gold;z-index: 990"></canvas>
+				<div class="flex-container"  id="collected_div"></div>
+				</div>
+				<div  ><img title='nuclear' alt='nuclear' id="btn_pixels_clean" hidden src='images/buttons/nuclear.png'><input type="button" id="btn_pixels_wiz" hidden value=" Search "> <input type="button" id="btn_pixels_clean_old"  hidden value=" Clean "> <input type="button" id="btn_pixels_save" hidden value=" Save "> <input type="button" id="btn_pixels_close" hidden value=" Close "></div>
+		
+		</div>
+
+	
+
+<div id='item3'><canvas id="canvas1"></canvas></div>
+<div id='item5_buffer' hidden ><canvas id="buffer_canvas1"></canvas></div>
+</div>
+</div>
+<div id='controls' style='display:none;'><div class='btn'><canvas id='help'></canvas></div></div>
+<div id="canvases"></div>
+<div id='planes_controls'></div>
+<div id='modal_window_help_window'></div>
+</body>
+</html>
+

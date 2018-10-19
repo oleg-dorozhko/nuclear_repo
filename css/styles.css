@@ -1,0 +1,75 @@
+/**div, **/
+canvas{margin: 5px;margin-right: 5px ; margin-left: 0px;}
+.selected
+{
+border: 1px solid blue;
+}
+#moves{
+	height:40px;
+}
+#planes0
+{
+	margin-top: 20px;
+}
+
+.saved_canvas
+{
+	/*margin: 4px;*/
+	border: solid white 2px;
+}
+
+.btn_selected
+{
+outline: 4px solid blue;
+}
+/*input[type="text"] {padding: 5px; margin: 10px;}*/
+
+.qwe {
+ margin:16px;
+  transform:scale(3.0);
+  opacity:0.9;
+  cursor:pointer;
+  }
+  .btn{
+ /* width:40px;*/
+  height:38px;
+  border:2px solid blue;
+  text-align:center;
+ margin-left:5px;
+  font-weight:bold;
+  font-size:1.5em;
+  cursor:pointer;
+  
+  }
+  
+  
+  #container0, #controls{
+  display: flex;
+   justify-content: center;
+  }
+  
+  .for_paste
+  {
+  border: none;
+  overflow: auto;
+  outline: none;
+  color: transparent;
+  text-shadow: 0px 0px 0px rgba(0,0,0,1);
+ -webkit-box-shadow: none;
+ -moz-box-shadow: none;
+ box-shadow: none;	cursor:pointer;
+/*margin: 3px 12px;*/
+padding-bottom:10px;
+width:76px;height:26px;
+font-size:30px;resize:none;overflow:hidden;
+font-family:serif;
+  }
+  
+  .paste_div
+  {
+   width:92px;
+   height:38px;
+   /*margin: 3px 12px;*/
+   border:2px solid blue;
+   text-align:center;
+  }
