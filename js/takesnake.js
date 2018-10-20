@@ -1,11 +1,12 @@
 var global_do_work=false;
 var global_cliked_points_array=[];
 var global_bgcolor=[255,255,255,255];
+var global_counter=0;
 
 function processing_click()
 {
-	if(global_do_work==true) return;
-	
+	if(global_do_work==true) { global_counter++;if( global_counter>50){global_do_work=false;}return;}
+	 global_counter=0;
 	if(global_cliked_points_array.length>0)
 	{
 		var x = global_cliked_points_array[0][0];

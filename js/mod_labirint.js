@@ -4,6 +4,7 @@ var global_url_to_glab='http://localhost:5000';
 var glob_all_collected_stones=[];
 var glob_all_generated_stones=[];
 var glob_session_id=null;
+var glob_little_belly_pressed=false;
 
 function labirint(x1,y1)
 {
@@ -109,8 +110,14 @@ while (element.firstChild) {
 								
 							var x = e.offsetX==undefined?e.layerX:e.offsetX;
 							var y = e.offsetY==undefined?e.layerY:e.offsetY;
+													
+							if(is_little_belly(x,y))
+							{
+								glob_little_belly_pressed=true;
+								
+							}
 							
-						doLeftClickOnPixelCanvas(x,y);
+							doLeftClickOnPixelCanvas(x,y);
 							
 							//pixelsPro_whenClickedOnLabirint(x,y);
 					
@@ -531,7 +538,12 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 				// }
 				// xhr.send();
 				
+								if(glob_little_belly_pressed)
+								{
+									glob_little_belly_pressed=false;
+									btn_pixels_clean();
 								
+								}
 										
 										
 								});
@@ -617,7 +629,24 @@ function comparePrevStateAndNowState(newImg)
 
 
 
-
+function is_little_belly(x,y,color)
+{
+	var canvas = document.getElementById("pixels");
+	var ctx = canvas.getContext("2d");
+	var imgData0=ctx.getImageData(0,0,canvas.width,canvas.height);
+	var color =  getColorArrayFromImageData(imgData0, x, y);
+	//ctx.putImageData( fillRectangleFast(imgData0, x-1, y-1, 1, 1, [0,0,0,255] ),0,0)
+	//ctx.putImageData( fillRectangleFast(imgData0, x, y, 1, 1, [0,0,0,255] ),0,0)
+	
+	
+	var f=false;
+	
+	{
+		if( rt_compareColors(color,[255,0,0,255],0)==true )
+		{ f=true;}
+	}
+	return f;
+}
 
 	
 function rt_compareColors(arr,arr2,lim)

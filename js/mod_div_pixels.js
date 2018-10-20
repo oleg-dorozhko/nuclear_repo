@@ -98,10 +98,10 @@ function showScaleDiv(target,x,y)
 	document.getElementById('selected_x_y').style.display="none";
 	document.getElementById('selected_x_y').innerHTML = ""+x+", "+y;
 	
-	var el = document.getElementById('btn_pixels_clean');
-	el.style.border = "";
-    el.style.visibility='visible';
-	el.style.display="inline-block";
+	// var el = document.getElementById('btn_pixels_clean');
+	// el.style.border = "";
+    // el.style.visibility='visible';
+	// el.style.display="inline-block";
 	
 	
 	
@@ -176,8 +176,15 @@ function setEventListenersOnTri_Btns()
 		}
 		
 		var btn = document.getElementById("btn_pixels_clean");
-		btn.onclick = function()
+		btn.onclick = btn_pixels_clean;
+
+}
+
+
+ function btn_pixels_clean()
 		{
+			glob_little_belly_pressed=false;
+			
 			var num_dif_colors = countDifferColorsOn();
 			
 			if(num_dif_colors>0)
@@ -241,7 +248,9 @@ function setEventListenersOnTri_Btns()
 			
 		}
 
-}
+
+
+
 
 function white(color2)
 {
