@@ -10,7 +10,7 @@ function addStone(callback)
 			var x=glob_x_left_top;
 			var y=glob_y_left_top;
 			var scale_koeficient=2;
-			var params = 'x='+x+'&y='+y+'&scale_koeficient='+scale_koeficient+'&num_of_strawbery='+wh;	
+			var params = 'md5='+glob_session_id+'&x='+x+'&y='+y+'&scale_koeficient='+scale_koeficient+'&num_of_strawbery='+wh;	
 			glob_x_left_top=x;
 			glob_y_left_top=y;
 			

@@ -3,6 +3,7 @@ var global_url_to_glab='http://localhost:5000';
 
 var glob_all_collected_stones=[];
 var glob_all_generated_stones=[];
+var glob_session_id=null;
 
 function labirint(x1,y1)
 {
@@ -17,8 +18,18 @@ while (element.firstChild) {
  glob_all_generated_stones=[];
 	document.getElementById('canvas0').onclick = function(ev) {
 		
-		
-		pixelsPro_whenClickedOnCanvas(ev); 
+// //document.getElementById("scale_div").style.border = '';
+			
+			_ctrlz();
+			document.getElementById("canvas0").onclick = whenBrakabakaEventOccurs;
+			
+			
+			var el = document.getElementById('btn_pixels_clean');
+			el.style.border = "";
+			el.style.visibility='hidden';
+			el.style.display="none";
+			document.getElementById("scale_div").style.visibility = 'hidden'; //visible
+			global_do_work=false;
 		
 	} 
 	
@@ -32,6 +43,10 @@ while (element.firstChild) {
 
 			if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; onerror(error); return; }
 			
+			glob_session_id = ''+xhr.responseText;
+			// works 
+			console.log('glob_session_id='+glob_session_id);
+			//  return;
 			// if(xhr.responseText=='test ok')
 			// {
 				// alert('test ok');
@@ -47,7 +62,7 @@ while (element.firstChild) {
 			var x=x1;
 			var y=y1;
 			var scale_koeficient=2;
-			var params = 'x='+x+'&y='+y+'&scale_koeficient='+scale_koeficient+'&num_of_strawbery='+wh;	
+			var params = 'md5='+glob_session_id+'&x='+x+'&y='+y+'&scale_koeficient='+scale_koeficient+'&num_of_strawbery='+wh;	
 			glob_x_left_top=x;
 			glob_y_left_top=y;
 			
@@ -111,10 +126,11 @@ while (element.firstChild) {
 								
 							var x = e.offsetX==undefined?e.layerX:e.offsetX;
 							var y = e.offsetY==undefined?e.layerY:e.offsetY;
-							
+							var params = 'md5='+glob_session_id;
 							
 							var xhr = new XMLHttpRequest();
-							xhr.open('GET', global_url_to_glab+'/get_xy_labirint', true);
+							xhr.open('POST', global_url_to_glab+'/get_xy_labirint', true);
+							xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 							xhr.onload = function(e) {  
 						
 								if (xhr.readyState != 4) return;
@@ -145,12 +161,15 @@ while (element.firstChild) {
 								
 							}
 
-							xhr.send();
+							xhr.send(params);
 							
 							
 							
 					
 					}
+					
+					
+					
 					addStone(
 								
 								function()
@@ -186,8 +205,13 @@ while (element.firstChild) {
 
 }
 function doLeftClickOnPixelCanvas(x,y){
+	
+	
+	var params = 'md5='+glob_session_id;
+	
 							var xhr = new XMLHttpRequest();
-							xhr.open('GET', global_url_to_glab+'/get_xy_labirint', true);
+							xhr.open('POST', global_url_to_glab+'/get_xy_labirint', true);
+							xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 							xhr.onload = function(e) {  
 						
 								if (xhr.readyState != 4) return;
@@ -211,45 +235,49 @@ function doLeftClickOnPixelCanvas(x,y){
 								
 							}
 
-							xhr.send();
+							xhr.send(params);
 							
 							}
-function getPassColor()
-{
-		var xhr = new XMLHttpRequest();
-		xhr.open('GET', global_url_to_glab+'/get_color_for_pass', true);
-		xhr.onload = function() {  
+							
+							
+// function getPassColor()
+// {
+		// var xhr = new XMLHttpRequest();
+		// xhr.open('GET', global_url_to_glab+'/get_color_for_pass', true);
+		// xhr.onload = function() {  
 			
-			if (xhr.readyState != 4) return;
+			// if (xhr.readyState != 4) return;
 
-			if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; onerror(error); return; }
+			// if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; onerror(error); return; }
 			
-			if(document.getElementById("pcolor")) document.getElementById("pixels_buttons").removeChild(document.getElementById("pcolor"));
-					var arr=null;
-					if(xhr.responseText==',,,') arr=[255,255,255,255];
-					else arr=xhr.responseText.split(",");		
-					console.log(arr);
-					var canvas = document.createElement("canvas");
-					var ctx = canvas.getContext("2d");
-					canvas.id='pcolor';
-					canvas.width = 20;
-					canvas.height = 20;
-					canvas.style.margin="5px";
-					ctx.fillStyle='rgba('+arr[0]+','+arr[1]+','+arr[2]+','+arr[3]/255+')';
-					ctx.fillRect(0, 0, canvas.width, canvas.height);
-					document.getElementById("pixels_buttons").appendChild(canvas);
+			// if(document.getElementById("pcolor")) document.getElementById("pixels_buttons").removeChild(document.getElementById("pcolor"));
+					// var arr=null;
+					// if(xhr.responseText==',,,') arr=[255,255,255,255];
+					// else arr=xhr.responseText.split(",");		
+					// console.log(arr);
+					// var canvas = document.createElement("canvas");
+					// var ctx = canvas.getContext("2d");
+					// canvas.id='pcolor';
+					// canvas.width = 20;
+					// canvas.height = 20;
+					// canvas.style.margin="5px";
+					// ctx.fillStyle='rgba('+arr[0]+','+arr[1]+','+arr[2]+','+arr[3]/255+')';
+					// ctx.fillRect(0, 0, canvas.width, canvas.height);
+					// document.getElementById("pixels_buttons").appendChild(canvas);
 					
-		}		
+		// }		
 				
 		
 		
-		xhr.send();
-}	
+		// xhr.send();
+// }	
 
 function getChaosedLabirint(callback)
 {
+	var params = 'md5='+glob_session_id;
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', global_url_to_glab+'/get_chaosed_labirint', true);
+		xhr.open('POST', global_url_to_glab+'/get_chaosed_labirint', true);
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr.responseType = "blob";
 		xhr.onload = function() {  
 			
@@ -287,13 +315,15 @@ function getChaosedLabirint(callback)
 			newImg.src = imageUrl;			
 		}
 		
-		xhr.send();
+		xhr.send(params);
 }	
 
 function get_array_of_all_generated_stones(callback)
 {
+	var params = 'md5='+glob_session_id;
 	var xhr = new XMLHttpRequest();
-				xhr.open('GET', global_url_to_glab+'/get_array_of_all_generated_stones', true);
+				xhr.open('POST', global_url_to_glab+'/get_array_of_all_generated_stones', true);
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 				xhr.onload = function(e) {  
 			
 					if (xhr.readyState != 4) return;
@@ -304,12 +334,12 @@ function get_array_of_all_generated_stones(callback)
 					glob_all_generated_stones=(arr);
 					callback();
 				}
-				xhr.send();
+				xhr.send(params);
 }				
 	
 function get_neighbours(x,y,callback)
 {
-	var params = 'x='+x+'&y='+y;
+	var params = 'md5='+glob_session_id+'&x='+x+'&y='+y;
 	var xhr = new XMLHttpRequest();
 				xhr.open('POST', global_url_to_glab+'/get_qty_neighbours', true);
 				xhr.onload = function(e) {  
@@ -411,7 +441,7 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 	get_neighbours(x,y);
 			
 	
-	var params = 'x='+x+'&y='+y;		
+	var params = 'md5='+glob_session_id+'&x='+x+'&y='+y;		
 	
 		//send to server
 		var xhr = new XMLHttpRequest();
@@ -440,10 +470,11 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 				
 				
 			//	var params = 'x='+x+'&y='+y;		
-	
+	var params = 'md5='+glob_session_id;
 		//send to server
 		var xhr4 = new XMLHttpRequest();
 		xhr4.open('POST', global_url_to_glab+'/get_error_message', true);
+		xhr4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr4.responseType = "text";
 		xhr4.onload = function() {  
 			
@@ -509,7 +540,7 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 			
 			
 		}
-		xhr4.send();		
+		xhr4.send(params);		
 				
 				glob_x_left_top=x;
 				glob_y_left_top=y;
@@ -657,7 +688,7 @@ function pixelsPro_whenRightClickedOnLabirint(x,y)
 	
 	
 	
-	var params = 'x='+x+'&y='+y;	
+	var params = 'md5='+glob_session_id+'&x='+x+'&y='+y;	
 	var el = document.getElementById("collected_div").childNodes[0];
 	if(el)
 	{
@@ -697,9 +728,10 @@ function pixelsPro_whenRightClickedOnLabirint(x,y)
 				 {
 										
 					
-				
+				var params = 'md5='+glob_session_id;
 				var xhr = new XMLHttpRequest();
-				xhr.open('GET', global_url_to_glab+'/get_collected', true);
+				xhr.open('POST', global_url_to_glab+'/get_collected', true);
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 				xhr.onload = function(e) {  
 			
 					if (xhr.readyState != 4) return;
@@ -722,7 +754,7 @@ function pixelsPro_whenRightClickedOnLabirint(x,y)
 					}
 					
 				}
-				xhr.send();
+				xhr.send(params);
 				
 								
 										
@@ -839,7 +871,7 @@ function pixelsPro_whenClickedOnCollected(el,x,y)
 {
 	
 	
-	var params = 'x='+x+'&y='+y+'&color='+el.getAttribute('attr_color');		
+	var params = 'md5='+glob_session_id+'&x='+x+'&y='+y+'&color='+el.getAttribute('attr_color');		
 
 		//send to server
 		var xhr = new XMLHttpRequest();
@@ -866,9 +898,11 @@ function pixelsPro_whenClickedOnCollected(el,x,y)
 				canvas.width = newImg.width;
 				canvas.height = newImg.height;
 				ctx.drawImage(newImg, 0, 0,canvas.width,canvas.height);
-				
+			
+			var params = 'md5='+glob_session_id;
 				var xhr = new XMLHttpRequest();
-				xhr.open('GET', global_url_to_glab+'/get_collected', true);
+				xhr.open('POST', global_url_to_glab+'/get_collected', true);
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 				xhr.onload = function(e) {  
 			
 					if (xhr.readyState != 4) return;
@@ -883,7 +917,7 @@ function pixelsPro_whenClickedOnCollected(el,x,y)
 					}
 					//if(lst[0])selectCollectedOn(lst[0]);
 				}
-				xhr.send();
+				xhr.send(params);
 				
 				
 				/*
