@@ -14,8 +14,9 @@ function pattern2canvas( session_id )
 	
 	getChaosedLabirint(  function() {
 		
-		
-		var intID = setInterval( update_main_image, 500 );
+	
+	get_last_version_of_pattern( function() {  	} );	
+	//	var intID = setInterval( update_main_image, 500 );
 		
 	});
 	

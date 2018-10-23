@@ -67,8 +67,28 @@ function addStone(callback)
 
 function free_prev_labirint( callback )
 {
-	//reinitialization server-side
-	callback();
+	//reinitialization server-side stones
+	var params='md5='+glob_session_id;
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', global_url_to_glab+'/clear_stones', true);
+	xhr.onload = function(e) {  
+
+		if (xhr.readyState != 4) return;
+	
+		if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; if(onerror)onerror(error); throw new Error(error);  }
+		
+		
+		callback();
+		
+		
+	}
+
+	xhr.send(params);
+	
+	
+	
+	
+	
 }
 
  

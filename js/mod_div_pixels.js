@@ -185,7 +185,8 @@ function setEventListenersOnTri_Btns()
 		{
 			glob_little_belly_pressed=false;
 			
-			var num_dif_colors = countDifferColorsOn();
+			var num_dif_colors =0;
+			//var num_dif_colors = countDifferColorsOn();
 			
 			if((num_dif_colors>0)||(document.getElementById("collected_div").childNodes.length<3))
 			{
@@ -237,13 +238,28 @@ function setEventListenersOnTri_Btns()
 						//window.open("http://s954447o.bget.ru/labirint");
 						//location.href='http://s954447o.bget.ru/labirint';//?url_for_winner=http://localhost/colors555?session='+md5(session_number_seed);
 						
-						free_prev_labirint( function() {
+						doLeftClick(glob_x_left_top,glob_y_left_top, function() {
+						
+						send_to_server_changed_canvas( function(){//and collected stones to treasure
 							
-								global_do_work=false;
-								doLeftClick(glob_x_left_top,glob_y_left_top);
 							
-							}
-						)
+								free_prev_labirint( function() {
+									
+																//	window.location.search = 'reloaded';
+get_last_version_of_pattern( function() { global_do_work=false; 	} );	
+																
+																//global_do_work=false;
+																//setTimeout(	processing_click, 100);
+													});
+								
+									
+									
+									
+									
+									
+							});
+							
+					});
 						
 			});
 			

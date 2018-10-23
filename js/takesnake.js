@@ -24,6 +24,7 @@ function processing_click()
 					
 						
 						
+						get_last_version_of_pattern( function() {  
 								
 								 
 								if(global_cliked_points_array.length>0)
@@ -46,7 +47,7 @@ function processing_click()
 													send_to_server_changed_canvas( function(){
 																
 																global_do_work=false;
-																setTimeout(	processing_click, 500);
+																setTimeout(	processing_click, 100);
 													});
 												
 										});
@@ -58,7 +59,7 @@ function processing_click()
 									
 								}
 								
-						
+							} );
 			
 				}
 				else  
@@ -82,9 +83,9 @@ function update_main_image()
 function doLeftClick(x,y,callback)
 {
 	 
-	 if(global_do_work==true) { callback(); return };
+	 //if(global_do_work==true) { callback(); return };
 	
-	 global_do_work=true;
+	global_do_work=true;
 	 
 
 	 //get color from cnv7
@@ -280,16 +281,16 @@ function whenBrakabakaEventOccurs(e)
 		
 		if( (bgcolor[0]==_color[0]) && (bgcolor[1]==_color[1]) && (bgcolor[2]==_color[2]) && (bgcolor[3]==_color[3]) ) 
 		{
-			/***
+			/***/
 			if((global_cliked_points_array.length==0)&&(global_do_work==false))
 			{
 				global_do_work=true;
-				repeat();
+				//repeat();
 				labirint(x,y);
 				
 				return;
 			}
-			***/
+			/***/
 			
 			return;
 		}
