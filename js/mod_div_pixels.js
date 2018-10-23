@@ -149,7 +149,7 @@ function setEventListenersOnTri_Btns()
 		{
 			// //document.getElementById("scale_div").style.border = '';
 			
-			_ctrlz();
+			// _ctrlz();
 			document.getElementById("canvas0").onclick = whenBrakabakaEventOccurs;
 			
 			
@@ -187,9 +187,10 @@ function setEventListenersOnTri_Btns()
 			
 			var num_dif_colors = countDifferColorsOn();
 			
-			if(num_dif_colors>0)
+			if((num_dif_colors>0)||(document.getElementById("collected_div").childNodes.length<3))
 			{
-				alert('Collect all plutonium before. Beware!\n...and tickle my little belly. Do not forget.');
+				alert('Collect all magik stones before. ...and wiz');
+				//alert('Collect all plutonium before. Beware!\n...and tickle my little belly. Do not forget.');
 				return;
 			}
 			
@@ -203,7 +204,7 @@ function setEventListenersOnTri_Btns()
 						//alert('Solve my puzzle before! It will be opened in new tab.');
 						//var session_number_seed=(new Data()).getTime();
 						
-						_ctrlz();
+					//	_ctrlz();
 					if(colors.length==0)
 					{						
 					var canvas7 = document.getElementById("canvas0");

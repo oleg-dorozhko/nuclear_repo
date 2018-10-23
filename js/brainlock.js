@@ -54,6 +54,40 @@ function getImageFromImageData(im, callback )
 	
 }
 
+function arrayBufferFromCanvasToServer(canvas_id, url, callback, onerror)
+{
+	var canvas = document.getElementById( canvas_id );
+	var context = canvas.getContext("2d");
+	var imageData = context.getImageData(0,0,canvas.width,canvas.height);
+	imageData.data;
+	var buf = new ArrayBuffer(imageData.data.length);
+	var buf8 = new Uint8ClampedArray(buf);
+	for(var i=0;i<imageData.data.length;i++)buf8[i]=imageData.data[i];
+	//var blob = new Blob( [imageData.data], {type:'image/png'});
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', url, true);
+	xhr.responseType = "blob";
+	xhr.onload = function(e) {  
+		
+		if (xhr.readyState != 4) return;
+
+		if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText; onerror(error); return; }
+		
+		var blob_from_server = xhr.response;
+		getImageFromBlob( blob_from_server, function(img) {
+				imageToCanvas(img, canvas_id, function() { 
+					
+					//if (callback) callback();
+				});	
+		});
+		//callback( blob_from_server );	
+		
+	}
+	
+	xhr.send(buf);
+}
+
+
 function blobToServer(blob, action, callback, onerror)
 {
 	var xhr = new XMLHttpRequest();

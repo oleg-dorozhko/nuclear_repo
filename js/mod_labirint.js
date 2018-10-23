@@ -4,7 +4,158 @@ var global_url_to_glab='http://localhost:5000';
 var glob_all_collected_stones=[];
 var glob_all_generated_stones=[];
 var glob_session_id=null;
+var glob_pattern_id=null;
+var glob_player_settings_id=null;
 var glob_little_belly_pressed=false;
+
+function pattern2canvas( session_id )
+{
+	glob_session_id = session_id;
+	
+	getChaosedLabirint(  function() {
+		
+		
+		var intID = setInterval( update_main_image, 500 );
+		
+	});
+	
+	
+}
+
+function get_session_id(callback)
+{
+	var params='md5=new';
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', global_url_to_glab+'/get_labirint_id', true);
+	xhr.onload = function(e) {  
+
+		if (xhr.readyState != 4) return;
+	
+		if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; if(onerror)onerror(error); throw new Error(error);  }
+		
+
+		callback(xhr.responseText);
+		
+		
+	}
+
+	xhr.send(params);
+}
+
+function is_server_buzzy(callback)
+{
+	
+	var params='md5='+glob_session_id;
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', global_url_to_glab+'/is_buzzy', true);
+		xhr.onload = function() {  
+			
+			if (xhr.readyState != 4) return;
+
+			if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; if(onerror) onerror(error); return; }
+			
+			console.log(xhr.responseText);
+			
+			callback(xhr.responseText);
+			
+		}
+		xhr.send(params);
+	
+	
+}
+
+function get_last_version_of_pattern(  callback )
+{
+	var params='md5='+glob_session_id;
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', global_url_to_glab+'/blob_from_server', true);
+		xhr.responseType='blob';
+		xhr.onload = function() {  
+			
+			if (xhr.readyState != 4) return;
+
+			if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; if(onerror) onerror(error); return; }
+			
+				var newImg = document.createElement("img");
+								
+				var urlCreator = window.URL || window.webkitURL;
+				
+				var imageUrl = urlCreator.createObjectURL(xhr.response);
+					
+				newImg.onload = function() {	
+					
+					
+					var canvas = document.getElementById("canvas0");
+					canvas.width = newImg.width;
+					canvas.height = newImg.height;
+					var ctx = canvas.getContext("2d");
+					ctx.drawImage(newImg, 0, 0,canvas.width,canvas.height);
+					
+					callback();
+			
+				}
+				newImg.src=imageUrl;
+			
+		}
+		xhr.send(params);
+			
+			
+}
+
+function send_to_server_changed_canvas( callback )
+{
+		
+	//arrayBufferFromCanvasToServer('canvas0', global_url_to_glab+'/blob_to_server_and_echo_from_server', callback, onerror);
+	//arrayBufferFromCanvasToServer('canvas0', global_url_to_glab+'/test245', callback, onerror);
+	var canvas = document.getElementById('canvas0');
+	var context = canvas.getContext("2d");
+	var imageData = context.getImageData(0,0,canvas.width,canvas.height);
+	
+	var buf = new ArrayBuffer(imageData.data.length);
+	var buf8 = new Uint8ClampedArray(buf);
+	for(var i=0;i<imageData.data.length;i++)buf8[i]=imageData.data[i];
+		
+		
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', global_url_to_glab+'/array_buffer_to_server', true);
+		xhr.onload = function() {  
+			
+			if (xhr.readyState != 4) return;
+
+			if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; onerror(error); return; }
+			
+			var data_id = ''+xhr.responseText;
+			// works 
+			console.log('data_id='+data_id);
+			
+			
+			var params='md5='+glob_session_id+'&data_id='+data_id;
+			var xhr2 = new XMLHttpRequest();
+			xhr2.open('POST', global_url_to_glab+'/commit_labirints_changes', true);
+			xhr2.onload = function() {  
+				
+				if (xhr2.readyState != 4) return;
+
+				if (xhr2.status != 200) {  var error = xhr2.status + ': ' + xhr2.statusText+': '+xhr2.response; if(onerror) onerror(error); return; }
+				
+				
+				//is_server_buzzy(function(){
+					callback();
+				//	});
+				
+				
+				
+			}
+			xhr2.send(params);
+			
+		}
+		xhr.send(buf);
+		
+	
+	
+			
+}
+
 
 function labirint(x1,y1)
 {
@@ -21,7 +172,7 @@ while (element.firstChild) {
 		
 // //document.getElementById("scale_div").style.border = '';
 			
-			_ctrlz();
+			// _ctrlz();
 			document.getElementById("canvas0").onclick = whenBrakabakaEventOccurs;
 			
 			
@@ -34,8 +185,8 @@ while (element.firstChild) {
 		
 	} 
 	
-	document.getElementById('canvas0').toBlob( function(blob) {
-		
+	
+		var params='md5='+glob_session_id;
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST', global_url_to_glab+'/init_pixels', true);
 		xhr.onload = function() {  
@@ -205,9 +356,9 @@ while (element.firstChild) {
 			
 		}
 		
-		xhr.send(blob);
+		xhr.send(params);
 		
-	} );
+	
 	
 
 }
@@ -309,13 +460,7 @@ function getChaosedLabirint(callback)
 					canvas.height = newImg.height;
 					ctx.drawImage(newImg, 0, 0,canvas.width,canvas.height);
 					
-					get_array_of_all_generated_stones(
-					
-					 function() {callback();}
-					
-					);
-					
-					
+					get_array_of_all_generated_stones( function() { if(callback) callback(); }	);
 					
 					//getPassColor();
 			}		

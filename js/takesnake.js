@@ -5,94 +5,136 @@ var global_counter=0;
 
 function processing_click()
 {
-	if(global_do_work==true) { global_counter++;if( global_counter>50){global_do_work=false;}return;}
-	 global_counter=0;
-	if(global_cliked_points_array.length>0)
-	{
-		var x = global_cliked_points_array[0][0];
-		var y = global_cliked_points_array[0][1];
-		doLeftClick(x,y);
-		global_cliked_points_array.splice(0,1);
-		//refreshDiv();
-		var canvas1 = document.getElementById('move_'+x+'_'+y);
-			if(canvas1!=null)
-			{
-				document.getElementById("moves").removeChild(canvas1);
-				sound();
-				
-				// if(isExistAnyNotRemovedClusters()==false)
-					// {
-						// //do_server_query();
-						// location.reload();
-					// }	
-
-			}
-		//setTimeout(	processing_click, 200);
+	if(global_do_work==true) { 
 		
+		global_counter++; 
+		
+		if( global_counter>10)  {		global_do_work=false;	}
+	
+		return;
 	}
-	else{
+								
+	global_counter=0;
+	
+									 
+		is_server_buzzy( function( data) {
 		
-		
-	}
+				if(data=='false')
+				{
+					
+						
+						
+								
+								 
+								if(global_cliked_points_array.length>0)
+								{
+										var x = global_cliked_points_array[0][0];
+										var y = global_cliked_points_array[0][1];
+										
+										global_cliked_points_array.splice(0,1);
+											
+										var canvas1 = document.getElementById('move_'+x+'_'+y);
+										if(canvas1!=null)
+										{
+											document.getElementById("moves").removeChild(canvas1);
+											sound();
+											
+										}
+										
+										doLeftClick(x,y,function() {
+											
+													send_to_server_changed_canvas( function(){
+																
+																global_do_work=false;
+																setTimeout(	processing_click, 500);
+													});
+												
+										});
+									
+								}
+								else
+								{
+									
+									
+								}
+								
+						
+			
+				}
+				else  
+				{
+					
+					console.log('Server is buzy');
+					setTimeout( processing_click, 500 );
+				}
+	});
+	
 	
 	
 }
 
-function doLeftClick(x,y)
+function update_main_image()
 {
-	if(global_do_work==true) return;
-	
-		global_do_work=true;
-		//get color from cnv7
-		var canvas7 = document.getElementById("canvas0");
-		var context7 = canvas7.getContext("2d");
-		var imgData7 = context7.getImageData(0,0,canvas7.width,canvas7.height);
+		if(global_do_work==true) return;
+	get_last_version_of_pattern( function() {  	} );
+}
 
-		var bgcolor = getColorArrayFromImageData(imgData7, x, y);
+function doLeftClick(x,y,callback)
+{
+	 
+	 if(global_do_work==true) { callback(); return };
+	
+	 global_do_work=true;
+	 
+
+	 //get color from cnv7
+	var canvas7 = document.getElementById("canvas0");
+	var context7 = canvas7.getContext("2d");
+	var imgData7 = context7.getImageData(0,0,canvas7.width,canvas7.height);
+
+	var bgcolor = getColorArrayFromImageData(imgData7, x, y);
 		
 		
 		
 		
 	
 		
-							init_dummy_fast_thread();
-							
-						global_dummy_fast_thread_arr2_all = [[x,y,1]];
+					init_dummy_fast_thread();
+						
+					global_dummy_fast_thread_arr2_all = [[x,y,1]];
 
-						
-						global_dummy_fast_thread_imgData =imgData7;// imgData9;
-						
-						global_dummy_fast_thread_in_cluster = [];
-						global_dummy_fast_thread_border_cluster = [];
-						
-						global_dummy_fast_thread_color = bgcolor;
-						global_removed_x_y_obj = {};
-						global_dummy_fast_thread_first_x=x;
+					
+					global_dummy_fast_thread_imgData =imgData7;// imgData9;
+					
+					global_dummy_fast_thread_in_cluster = [];
+					global_dummy_fast_thread_border_cluster = [];
+					
+					global_dummy_fast_thread_color = bgcolor;
+					global_removed_x_y_obj = {};
+					global_dummy_fast_thread_first_x=x;
 					global_dummy_fast_thread_first_y=y;
-						
-						var arr = getSameColorNeighbors0( global_dummy_fast_thread_imgData, global_dummy_fast_thread_color, x, y, 1, 1 );
-								
-						if(arr[0].length==0) return;
+					
+					
+					var arr = getSameColorNeighbors0( global_dummy_fast_thread_imgData, global_dummy_fast_thread_color, x, y, 1, 1 );
+							
+					if(arr[0].length==0) { callback(); return; }
 
 							
 							
-						dummy_fast_thread (function(){
+					dummy_fast_thread (   function()   {
 							
-								var canvas7 = document.getElementById("canvas0");
-									var context7 = canvas7.getContext("2d");
-									
-									context7.putImageData(imgData7,0,0);
-									global_dummy_fast_thread_border_cluster.push([x,y]);
-									post_bubabu(global_dummy_fast_thread_border_cluster,[255,255,255,255]); 	
-							global_do_work=false;
+							var canvas7 = document.getElementById("canvas0");
+							var context7 = canvas7.getContext("2d");
 							
-							
-						});
+							context7.putImageData(imgData7,0,0);
+							global_dummy_fast_thread_border_cluster.push([x,y]);
+							post_bubabu(global_dummy_fast_thread_border_cluster,[255,255,255,255]); 
+
 						
-							
-							
-							
-							
+							callback();
+										
+										
+					} );
 		
 		
 		
@@ -223,8 +265,7 @@ function whenBrakabakaEventOccurs(e)
 			// location.reload();
 		// }
 		
-		
-		
+	
 		//get x y
 		var x = e.offsetX==undefined?e.layerX:e.offsetX;
 		var y = e.offsetY==undefined?e.layerY:e.offsetY;
@@ -239,7 +280,7 @@ function whenBrakabakaEventOccurs(e)
 		
 		if( (bgcolor[0]==_color[0]) && (bgcolor[1]==_color[1]) && (bgcolor[2]==_color[2]) && (bgcolor[3]==_color[3]) ) 
 		{
-			
+			/***
 			if((global_cliked_points_array.length==0)&&(global_do_work==false))
 			{
 				global_do_work=true;
@@ -248,7 +289,9 @@ function whenBrakabakaEventOccurs(e)
 				
 				return;
 			}
+			***/
 			
+			return;
 		}
 		
 		
@@ -289,9 +332,9 @@ function whenBrakabakaEventOccurs(e)
 	canvas1.onclick = processing_click;
 	//canvas1.oncontextmenu = ctrlz;
 	document.getElementById("moves").appendChild(canvas1);
-
+	
 		
-	//	processing_click();
+	processing_click();
 
 }
 
@@ -301,14 +344,9 @@ window.onload = function()
 	var CLIPBOARD = new CLIPBOARD_CLASS("canvas0", true);
 	document.getElementById("canvas0").onclick = whenBrakabakaEventOccurs;
 	document.getElementById("canvas0").oncontextmenu = ctrlz;
-	do_server_query(0,function(){
-		
-		repeat();
 	
-		var intID=setInterval(processing_click, 500);
+	get_session_id( pattern2canvas );
 			
-		
-	});
 	
 }
 
