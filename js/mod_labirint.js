@@ -12,14 +12,7 @@ function pattern2canvas( session_id )
 {
 	glob_session_id = session_id;
 	
-	getChaosedLabirint(  function() {
-		
-	
-	get_last_version_of_pattern( function() {  	} );	
-	//	var intID = setInterval( update_main_image, 500 );
-		
-	});
-	
+	getChaosedLabirint(  function() { init_websocket();	});
 	
 }
 

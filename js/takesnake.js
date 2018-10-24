@@ -9,7 +9,7 @@ function processing_click()
 		
 		global_counter++; 
 		
-		if( global_counter>10)  {		global_do_work=false;	}
+		if( global_counter>3)  {		global_do_work=false;	}
 	
 		return;
 	}
@@ -347,10 +347,50 @@ window.onload = function()
 	document.getElementById("canvas0").oncontextmenu = ctrlz;
 	
 	get_session_id( pattern2canvas );
-			
 	
-}
 
+ }
+
+ function init_websocket()
+ {
+	 	  window.WebSocket = window.WebSocket || window.MozWebSocket;
+
+	  var connection = new WebSocket('ws://127.0.0.1:8081');
+
+	  connection.onopen = function () {
+		// connection is opened and ready to use
+		console.log('connection is opened and ready to use'); 
+	  };
+
+	  connection.onerror = function (error) {
+		// an error occurred when sending/receiving data
+		console.log('some error occurred when sending/receiving data');
+		console.log(error);
+	  };
+
+	  connection.onmessage = function (message) {
+			console.log(message);
+			
+			get_last_version_of_pattern( function() {  	} );	
+	//	var intID = setInterval( update_main_image, 500 );
+		
+	
+	
+			// try to decode json (I assume that each message
+			// from server is json)
+			// try {
+			  // var json = JSON.parse(message.data);
+			// } catch (e) {
+			  // console.log('This doesn\'t look like a valid JSON: ',
+				  // message.data);
+			  // return;
+			// }
+			// handle incoming message
+		};
+
+ }
+
+	
 function renderCanvas0()
 {
 	var canvas0 = document.getElementById("canvas0");
