@@ -355,7 +355,8 @@ window.onload = function()
  {
 	 	  window.WebSocket = window.WebSocket || window.MozWebSocket;
 
-	  var connection = new WebSocket('ws://127.0.0.1:8081');
+	 // var connection = new WebSocket('ws://127.0.0.1:8080');
+	  var connection = new WebSocket(global_url_to_ws);
 
 	  connection.onopen = function () {
 		// connection is opened and ready to use

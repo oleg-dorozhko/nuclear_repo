@@ -1,5 +1,8 @@
-//var global_url_to_glab='https://patterns-editor.herokuapp.com';
-var global_url_to_glab='http://localhost:5000';
+var global_url_to_glab='https://patterns-editor.herokuapp.com';
+var global_url_to_ws='ws://patterns-editor.herokuapp.com/';
+
+//var global_url_to_glab='http://localhost:5000';
+//var global_url_to_ws='ws://127.0.0.1:8081';
 
 var glob_all_collected_stones=[];
 var glob_all_generated_stones=[];
@@ -12,7 +15,14 @@ function pattern2canvas( session_id )
 {
 	glob_session_id = session_id;
 	
-	getChaosedLabirint(  function() { init_websocket();	});
+	getChaosedLabirint(  function() { 
+	
+    	get_url_to_ws( function() { init_websocket()
+		
+			setInterval(()=>{document.location.reload(true);},5000*12);
+		
+		})
+	});
 	
 }
 
@@ -35,6 +45,30 @@ function get_session_id(callback)
 
 	xhr.send(params);
 }
+
+function get_url_to_ws(callback)
+{
+	var params='md5=new';
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', global_url_to_glab+'/get_url_to_ws', true);
+	xhr.onload = function(e) {  
+
+		if (xhr.readyState != 4) return;
+	
+		if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; if(onerror)onerror(error); throw new Error(error);  }
+		var obj=JSON.parse(xhr.responseText);
+		//if(obj.url=="::") obj.url='127.0.0.1'
+		//global_url_to_ws=global_url_to_glab+':'+obj.port;
+		//global_url_to_ws=global_url_to_ws.replace(/^https/, 'ws');
+		//console.log('ws_url=['+xhr.responseText+']');
+		//callback(xhr.responseText);
+		callback();
+		
+	}
+
+	xhr.send(params);
+}
+
 
 function is_server_buzzy(callback)
 {
