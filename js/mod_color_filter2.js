@@ -3,6 +3,21 @@ function wizardry()
 	//alert('OMG! I found a magik stone! \nOk. I\'ll put it in my pocket.\nJump on stone now!');
 	//addStone();
 }
+function getRndColor()
+{
+	var r = getRandomInt(0, 256);
+	var g = getRandomInt(0, 256);
+	var b = getRandomInt(0, 256);
+	var a = 255;
+	
+	return [r,g,b,a];
+	
+}
+
+function og(s)
+{
+	console.log(s);
+}
 
 function addStone(wh, callback)
 {
@@ -178,7 +193,7 @@ function dummy_fast_thread ( callback )
 			}
 			
 			global_dummy_fast_thread_arr2_all.splice(M,1);
-			global_dummy_fast_thread_imgData=fillRectangleFast(global_dummy_fast_thread_imgData,x,y,1,1,[255,255,255,255]);
+			global_dummy_fast_thread_imgData=fillRectangleFast(global_dummy_fast_thread_imgData,x,y,1,1,[255,255,255,255]);//global_fill_color);
 			//global_dummy_fast_thread_imgData
 			
 			if(global_dummy_fast_thread_arr2_all.length==0) {callback();return;}
@@ -231,7 +246,7 @@ function whenClickedOnCanvas(e)
 	}
 			
 }	
-		
+	
 function setEventListenersOnPixels()
 		{
 			var pcnv = document.getElementById("pixels");
@@ -466,14 +481,14 @@ function setEventListenersOnTri_Btns()
 							
 									send_to_server_changed_canvas( function(){//and collected stones to treasure
 													
-										free_prev_labirint( function() {
+										// free_prev_labirint( function() {
 									
 																
-											get_last_version_of_pattern( function() { reload_pixels(); global_do_work=false; 	} );	
+											// get_last_version_of_pattern( function() { reload_pixels(); global_do_work=false; 	} );	
 																
-																//global_do_work=false;
-															//setTimeout(	processing_click, 100);
-										});
+																// //global_do_work=false;
+															// //setTimeout(	processing_click, 100);
+										// });
 								
 									});
 								});
@@ -517,24 +532,47 @@ function pattern2canvas( session_id )
 	
 }
 
+window.addEventListener('error', function (e) {
+    var error = e.error;
+    console.log(error);
+	alert(error);
+});
+
+// function onerror(error)
+// {
+	// console.log(error);
+	
+// }
+
 function get_session_id(callback)
 {
 	var params='md5=new';
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', global_url_to_glab+'/get_labirint_id', true);
-	xhr.onload = function(e) {  
 
-		if (xhr.readyState != 4) return;
-	
-		if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; if(onerror)onerror(error); throw new Error(error);  }
+	try
+	{
+		var xhr = new XMLHttpRequest();
 		
+		xhr.open('POST', global_url_to_glab+'/get_labirint_id', true);
+		
+		xhr.onload = function(e) {  
 
-		callback(xhr.responseText);
+			if (xhr.readyState != 4) return;
+			
+			if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; if(onerror)onerror(error); throw new Error(error);  }
+				
+			callback(xhr.responseText);
+			
+			
+		}
 		
+		xhr.send(params);
 		
 	}
-
-	xhr.send(params);
+	catch(err)
+	{
+		onerror(err);
+	}
+	
 }
 
 function get_url_to_ws(callback)
@@ -981,125 +1019,12 @@ while (element.firstChild) {
 							e = (e) ? e : event;   
 							if(e.button == 2) return;
 								
+								
+							
 							var x = e.offsetX==undefined?e.layerX:e.offsetX;
 							var y = e.offsetY==undefined?e.layerY:e.offsetY;
 							
-							var params = 'md5='+glob_session_id;
-	
-							var xhr = new XMLHttpRequest();
-							xhr.open('POST', global_url_to_glab+'/get_xy_labirint', true);
-							xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-							xhr.onload = function(e) {  
-						
-								if (xhr.readyState != 4) return;
-							
-								if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; onerror(error); throw new Error(error);  }
-								
-								var obj = JSON.parse(xhr.responseText);
-								glob_x_left_top=Number(obj.x);
-								glob_y_left_top=Number(obj.y);
-								var nn = Number(obj.nn);
-								var n = (x/(10*nn)|0)-7;
-								var m = (y/(10*nn)|0)-7;
-							
-							    glob_x_left_top_last=glob_x_left_top;
-							    glob_y_left_top_last=glob_y_left_top;
-								glob_x_left_top += n;
-								glob_y_left_top += m;
-															
-							// if(is_little_belly(x,y))
-							// {
-								// glob_little_belly_pressed=true;
-								
-							// }
-							
-						//var stones = get_near_stones(glob_x_left_top,glob_y_left_top);
-							//console.log("stones="+stones);
-							//if(stones.length>0)
-							{
-								doLeftClick(glob_x_left_top,glob_y_left_top, function() {
-											
-										var r=false;	
-										var xx=0;var yy=0;
-										do {
-											r=find_neighbours_by_ulitka(++xx,++yy);
-											
-											
-											
-											//labirint(glob_x_left_top,glob_y_left_top);
-											if(r) break;
-										}
-										while(true);
-														
-										//	save();									
-										if(r)	labirint(glob_x_left_top,glob_y_left_top);
-											
-											
-										send_to_server_changed_canvas( function(){
-														
-														
-																		labirint(glob_x_left_top,glob_y_left_top);
-																		
-																		setTimeout(processing_click, 100);
-															});
-
-
-											
-												// send_to_server_changed_canvas( function()  {	});
-								});
-							}
-							
-								if(click_on_white(glob_x_left_top,glob_y_left_top))
-								{
-								
-												doLeftClickOnPixelCanvas(x,y);
-								}
-								else if(stones.length>0)
-									
-												doLeftClickOnPixelCanvas(x,y);
-								else
-								{
-									
-									// if(click_near_last_xy())
-									// {
-										// doLeftClick( glob_x_left_top, glob_y_left_top, function() {
-													
-												// send_to_server_changed_canvas( function()  {
-																		
-													// obj={}
-													// obj.glob_session_id=glob_session_id;
-													// obj.x=glob_x_left_top;
-													// obj.y=y;
-													// obj.scale_koeficient=scale_koeficient;
-													// obj.wh=wh;
-													
-													
-													// glab_labirint_params=obj;
-													// reload_pixels();
-													
-														// document.getElementById("canvas0").onclick = whenBrakabakaEventOccurs;
-														
-														
-														// var el = document.getElementById('btn_pixels_clean');
-														// el.style.border = "";
-														// //el.style.visibility='hidden';
-														// //el.style.display="none";
-														// //document.getElementById("scale_div").style.visibility = 'hidden'; //visible
-														// //document.getElementById("scale_div").style.display = 'none'; //visible
-														
-			
-														
-														
-														
-														
-														// setTimeout(	processing_click, 100);
-														
-												// });
-										// });
-									}
-							
-								}
-							xhr.send(params);
+							whenUserLeftClickOnPixels(x,y);
 					}
 							
 							
@@ -1327,14 +1252,14 @@ function get_ulitka(m,n) {
 				arr3.push([(x-xx),(y-yy),arr[x][y]]);
                 if (arr[x][y] < 10) {
                     //Два пробела, чтобы в консоли столбцы были ровные.
-                    console.log(arr[x][y] + "["+(x-xx)+","+(y-yy)+"],  ");
+                   // console.log(arr[x][y] + "["+(x-xx)+","+(y-yy)+"],  ");
                 } else {
-                     console.log(arr[x][y] + "["+(x-xx)+","+(y-yy)+"], ");
+                    // console.log(arr[x][y] + "["+(x-xx)+","+(y-yy)+"], ");
                 }
             }
-             console.log("");
+             //console.log("");
         }
-		console.log(""+arr3);
+		//console.log(""+arr3);
 		return arr3;
  }
 function click_near_last_xy()
@@ -1901,8 +1826,15 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 									btn_pixels_clean();
 								
 								}
-									hfhfbhr44(x,y);	
-										
+									//if( hfhfbhr44(x,y)) doLeftClick(x,y);//hfhfbhr44(x,y);	
+									//var result_hgb=hfhfbhr44(x,y);
+									
+									
+							//	if(result_hgb ) doLeftClick(result_hgb.f2_x,result_hgb.f2_y,function(){	});	
+							
+						//	if(result_hgb ) labirint(result_hgb.f2_x,result_hgb.f2_y);	
+							
+							
 								});
 			
 			
@@ -1951,7 +1883,18 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 
 		
 }
-
+// var glob_tg_id=null;
+// function hearth()
+// {
+	glob_x_left_top=getRandomInt(0,document.getElementById("canvas0").width);
+	glob_y_left_top=getRandomInt(0,document.getElementById("canvas0").height);
+	glob_tg_id=setInterval(function(){	hfhfbhr44();},500);
+// }
+// function fryday()
+// {
+	// if(glob_tg_id!=null)  clearInterval(glob_tg_id);
+	// setTimeout(do_work,500);
+// }
 function comparePrevStateAndNowState(newImg)
 {
 
@@ -2569,7 +2512,7 @@ function update_main_image()
 		if(global_do_work==true) return;
 	get_last_version_of_pattern( function() {  	} );
 }
-
+var global_fill_color=null;
 function doLeftClick(x,y,callback)
 {
 	 
@@ -2609,6 +2552,7 @@ function doLeftClick(x,y,callback)
 					//var arr = getSameColorNeighbors0( global_dummy_fast_thread_imgData, global_dummy_fast_thread_color, x, y, 1, 1 );
 							
 					//if(arr[0].length==0) { callback(); return; }
+					global_fill_color=getRndColor();
 
 							
 							
@@ -2619,11 +2563,11 @@ function doLeftClick(x,y,callback)
 							
 							context7.putImageData(imgData7,0,0);
 							global_dummy_fast_thread_border_cluster.push([x,y]);
-							post_bubabu(global_dummy_fast_thread_border_cluster,[255,255,255,255]); 
+							post_bubabu(global_dummy_fast_thread_border_cluster,[255,255,255,255]);//global_fill_color); 
 
 							global_do_work=false;
 						
-							callback();
+						//	callback();
 										
 										
 					} );
@@ -2808,6 +2752,116 @@ function reload_pixels()
 					
 }
 
+
+function	whenUserLeftClickOnPixels(x,y)
+							{
+								
+								
+								var params = 'md5='+glob_session_id;
+		
+								var xhr = new XMLHttpRequest();
+								xhr.open('POST', global_url_to_glab+'/get_xy_labirint', true);
+								xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+								xhr.onload = function(e) {  
+							
+									if (xhr.readyState != 4) return;
+								
+									if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; onerror(error); throw new Error(error);  }
+									
+									var obj = JSON.parse(xhr.responseText);
+									glob_x_left_top=Number(obj.x);
+									glob_y_left_top=Number(obj.y);
+									var nn = Number(obj.nn);
+									var n = (x/(10*nn)|0)-7;
+									var m = (y/(10*nn)|0)-7;
+								
+									glob_x_left_top_last=glob_x_left_top;
+									glob_y_left_top_last=glob_y_left_top;
+									glob_x_left_top += n;
+									glob_y_left_top += m;
+																
+								// if(is_little_belly(x,y))
+								// {
+									// glob_little_belly_pressed=true;
+									
+								// }
+								
+							//var stones = get_near_stones(glob_x_left_top,glob_y_left_top);
+								//console.log("stones="+stones);
+								//if(stones.length>0)
+								// {
+									// doLeftClick(glob_x_left_top,glob_y_left_top, function() {
+												
+												
+											// send_to_server_changed_canvas( function(){
+															
+															
+																			// labirint(glob_x_left_top,glob_y_left_top);
+																			
+																			// setTimeout(processing_click, 100);
+																// });
+
+
+												
+												
+									// });
+								// }
+								
+									if(click_on_white(glob_x_left_top,glob_y_left_top))
+									{
+									
+													//doLeftClickOnPixelCanvas(x,y);
+									}
+									//else if(stones.length>0)
+										
+													doLeftClickOnPixelCanvas(x,y);
+									//else
+									{
+										
+										// if(click_near_last_xy())
+										// {
+											// doLeftClick( glob_x_left_top, glob_y_left_top, function() {
+														
+													// send_to_server_changed_canvas( function()  {
+																			
+														// obj={}
+														// obj.glob_session_id=glob_session_id;
+														// obj.x=glob_x_left_top;
+														// obj.y=y;
+														// obj.scale_koeficient=scale_koeficient;
+														// obj.wh=wh;
+														
+														
+														// glab_labirint_params=obj;
+														// reload_pixels();
+														
+															// document.getElementById("canvas0").onclick = whenBrakabakaEventOccurs;
+															
+															
+															// var el = document.getElementById('btn_pixels_clean');
+															// el.style.border = "";
+															// //el.style.visibility='hidden';
+															// //el.style.display="none";
+															// //document.getElementById("scale_div").style.visibility = 'hidden'; //visible
+															// //document.getElementById("scale_div").style.display = 'none'; //visible
+															
+				
+															
+															
+															
+															
+															// setTimeout(	processing_click, 100);
+															
+													// });
+											// });
+										}
+								
+									}
+								xhr.send(params);
+							
+							}
+				
+
 function construct_params()
 {
 	
@@ -2858,8 +2912,13 @@ function whenBrakabakaEventOccurs(e)
 			}
 			else{
 				
-				hfhfbhr44(x,y);
-				
+				//if(hfhfbhr44(x,y)) doLeftClick(x,y);
+				//var result_hgb=hfhfbhr44(x,y);
+				//if(result_hgb ) doLeftClick(result_hgb.f2_x,result_hgb.f2_y,function(){	});
+				//if(result_hgb ) labirint(result_hgb.f2_x,result_hgb.f2_y);						
+									
+									
+							
 				
 			}
 										});
@@ -2914,9 +2973,87 @@ function whenBrakabakaEventOccurs(e)
 
 function hfhfbhr44(x,y)
 {
-	glob_x_left_top=x;
+	og('in hfhfbhr44: x='+x+',y='+y);
+	if((x==undefined)&&(y==undefined))
+	{ 
+		x=glob_x_left_top;
+		y=glob_y_left_top;
+	}
+	
+	var colors = get_near_not_stones(x,y);
+	og('in hfhfbhr44: '+ colors);
+	
+	if(colors.length>0)
+	{
+		
+			 glob_x_left_top=colors[0][0];
+			 glob_y_left_top=colors[0][1];
+			
+		 // setTimeout(function(){	
+		 
+				doLeftClick(glob_x_left_top,glob_y_left_top);
+			//	whenUserLeftClickOnPixels(glob_x_left_top,glob_y_left_top);
+				
+				 // setTimeout(  
+				 
+				 
+				 // function(){	 
+				 
+				 
+				// var result_hgb= hfhfbhr44(glob_x_left_top,glob_y_left_top);
+				// if(result_hgb!=null)
+							// whenUserLeftClickOnPixels(result_hgb.f2_x,result_hgb.f2_y);
+
+				
+
+
+
+
+				 // },200);
+					
+					// send_to_server_changed_canvas(
+				
+					 // function(){//and collected stones to treasure
+													
+										// free_prev_labirint( function() {
+									
+																
+											// get_last_version_of_pattern( function() { 
+
+												// setTimeout(function(){	 
+								 
+								 // var f1_x = glob_x_left_top+getRandomInt(0,20)-10;
+								 // var f1_y = glob_y_left_top+ getRandomInt(0,20)-10;
+								
+								// var result_hgb=hfhfbhr44(f1_x,f1_y);
+
+
+											// } , 200);	
+																
+																// //global_do_work=false;
+															// //setTimeout(	processing_click, 100);
+										// });
+								
+									// });
+					
+				// });
+				
+				
+				
+				 // }
+				 
+				 
+				 // },100);
+				
+		 // },100);
+		 // return null;
+	}
+	else{
+	
+				glob_x_left_top=x;
 				glob_y_left_top=y;
 				var r=false;	
+				
 						var xx=0;var yy=0;
 						do {
 							r=find_neighbours_by_ulitka(++xx,++yy);
@@ -2929,11 +3066,23 @@ function hfhfbhr44(x,y)
 						while(true);
 										
 						//	save();									
-						if(r)	labirint(glob_x_left_top,glob_y_left_top);	
-						else {labirint(x,y);
+						if(r)//	labirint(glob_x_left_top,glob_y_left_top);	
+						{
+							//glob_x_left_top=
+							//glob_y_left_top
+							// var result_hgb=hfhfbhr44(f1_x,f1_y);
+							// if(result_hgb ) doLeftClick(result_hgb.f2_x,result_hgb.f2_y, function(){			});
+							//return {f2_x:glob_x_left_top,f2_y:glob_y_left_top};
+						}
+						else 
+						{
+							//return null;//labirint(x,y);
+							send_to_server_changed_canvas( function(){			});
+						}
+	}
 
-						return;}
 }
+
 // window.onload = function()
 // {
 	
@@ -2979,7 +3128,35 @@ function hfhfbhr44(x,y)
 
  }
 
+ function check_all_white()
+ {
+	var canvas0 = document.getElementById("canvas0");
+	var context0 = canvas0.getContext("2d");
 	
+	var imgData0 = context0.getImageData(0,0,canvas0.width,canvas0.height);
+	
+	for(var ind=0;ind<imgData0.data.length;ind+=4)
+	{
+		var color0 = mod_triple_getColorArrayFromImageDataByIndex(ind);
+		if(white(color0)==false)return false;
+	}
+	return true;
+ }
+	
+function mod_triple_getColorArrayFromImageDataByIndex(imgData0, idx)
+{
+	
+		
+		
+		var arr0 = [];
+		arr0[0] = imgData0.data[idx];	
+		arr0[1] = imgData0.data[idx+1];	
+		arr0[2] = imgData0.data[idx+2];
+		arr0[3] = imgData0.data[idx+3];	
+		
+		return arr0;
+}
+
 function renderCanvas0()
 {
 	var canvas0 = document.getElementById("canvas0");
