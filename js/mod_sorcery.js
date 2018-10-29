@@ -4,9 +4,9 @@ function wizardry()
 	addStone();
 }
 
-function addStone(callback)
+function addStone(wh, callback)
 {
-	var wh=3;
+	//var wh=3;
 			var x=glob_x_left_top;
 			var y=glob_y_left_top;
 			var scale_koeficient=2;
@@ -68,22 +68,22 @@ function addStone(callback)
 function free_prev_labirint( callback )
 {
 	//reinitialization server-side stones
-	var params='md5='+glob_session_id;
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', global_url_to_glab+'/clear_stones', true);
-	xhr.onload = function(e) {  
+	// var params='md5='+glob_session_id;
+	// var xhr = new XMLHttpRequest();
+	// xhr.open('POST', global_url_to_glab+'/clear_stones', true);
+	// xhr.onload = function(e) {  
 
-		if (xhr.readyState != 4) return;
+		// if (xhr.readyState != 4) return;
 	
-		if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; if(onerror)onerror(error); throw new Error(error);  }
+		// if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; if(onerror)onerror(error); throw new Error(error);  }
 		
 		
 		callback();
 		
 		
-	}
+	// }
 
-	xhr.send(params);
+	// xhr.send(params);
 	
 	
 	

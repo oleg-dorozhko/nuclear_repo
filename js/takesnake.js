@@ -2,17 +2,18 @@ var global_do_work=false;
 var global_cliked_points_array=[];
 var global_bgcolor=[255,255,255,255];
 var global_counter=0;
-
+var MAX_CHARGE=10;
 function processing_click()
 {
-	if(global_do_work==true) { 
+	if(global_do_work==true) return;
+	// if(global_do_work==true) { 
 		
-		global_counter++; 
+		// global_counter++; 
 		
-		if( global_counter>3)  {		global_do_work=false;	}
+		// if( global_counter>3)  {		global_do_work=false;	}
 	
-		return;
-	}
+		// return;
+	// }
 								
 	global_counter=0;
 	
@@ -34,11 +35,12 @@ function processing_click()
 										
 										global_cliked_points_array.splice(0,1);
 											
+										
 										var canvas1 = document.getElementById('move_'+x+'_'+y);
 										if(canvas1!=null)
 										{
 											document.getElementById("moves").removeChild(canvas1);
-											sound();
+											if(click_on_white(x,y)==false)	sound();
 											
 										}
 										
@@ -116,9 +118,9 @@ function doLeftClick(x,y,callback)
 					global_dummy_fast_thread_first_y=y;
 					
 					
-					var arr = getSameColorNeighbors0( global_dummy_fast_thread_imgData, global_dummy_fast_thread_color, x, y, 1, 1 );
+					//var arr = getSameColorNeighbors0( global_dummy_fast_thread_imgData, global_dummy_fast_thread_color, x, y, 1, 1 );
 							
-					if(arr[0].length==0) { callback(); return; }
+					//if(arr[0].length==0) { callback(); return; }
 
 							
 							
@@ -131,6 +133,7 @@ function doLeftClick(x,y,callback)
 							global_dummy_fast_thread_border_cluster.push([x,y]);
 							post_bubabu(global_dummy_fast_thread_border_cluster,[255,255,255,255]); 
 
+							global_do_work=false;
 						
 							callback();
 										
@@ -139,6 +142,22 @@ function doLeftClick(x,y,callback)
 		
 		
 		
+}
+
+function click_on_white(x,y)
+{
+	var canvas7 = document.getElementById("canvas0");
+	var context7 = canvas7.getContext("2d");
+	var imgData7 = context7.getImageData(0,0,canvas7.width,canvas7.height);
+
+	var bgcolor = getColorArrayFromImageData(imgData7, x, y);
+	var f=false;
+	
+	{
+		if( rt_compareColors(bgcolor,[255,255,255,255],0)==true )
+		{ f=true;}
+	}
+	return f;
 }
 
 function ctrlz(e)
@@ -266,6 +285,7 @@ function whenBrakabakaEventOccurs(e)
 			// location.reload();
 		// }
 		
+	if(global_cliked_points_array.length>MAX_CHARGE) return;
 	
 		//get x y
 		var x = e.offsetX==undefined?e.layerX:e.offsetX;
@@ -574,7 +594,7 @@ function whenPastingFinished(img)
 	//collectAllClusters(imgData2);
 	
 }
-
+global_time_is_now=0;
 function initCollectAllClusters()
 {
 	
@@ -599,6 +619,16 @@ function shuffle(a) {
         a[i - 1] = a[j];
         a[j] = x;
     }
+}
+
+function whenWeWantToDoRefresh()
+{
+	if(global_do_work==true) { global_time_is_now=0; return; }
+	
+	setTimeout(()=>{
+		global_time_is_now += 1;
+		if(global_time_is_now>60) { global_time_is_now=0; document.location.reload(true); }
+	},20000);
 }
 function generatePackOfMMMColors()
 {

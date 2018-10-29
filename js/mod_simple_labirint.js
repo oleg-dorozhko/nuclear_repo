@@ -1,8 +1,8 @@
-var global_url_to_glab='https://patterns-editor.herokuapp.com';
-var global_url_to_ws='ws://patterns-editor.herokuapp.com/';
+//var global_url_to_glab='https://patterns-editor.herokuapp.com';
+//var global_url_to_ws='wss://patterns-editor.herokuapp.com/';
 
-//var global_url_to_glab='http://localhost:5000';
-//var global_url_to_ws='ws://127.0.0.1:8081';
+var global_url_to_glab='http://localhost:5000';
+var global_url_to_ws='ws://localhost:5000';
 
 var glob_all_collected_stones=[];
 var glob_all_generated_stones=[];
@@ -10,7 +10,8 @@ var glob_session_id=null;
 var glob_pattern_id=null;
 var glob_player_settings_id=null;
 var glob_little_belly_pressed=false;
-
+var glob_x_left_top_last=0;
+var glob_y_left_top_last=0;
 function pattern2canvas( session_id )
 {
 	glob_session_id = session_id;
@@ -19,7 +20,7 @@ function pattern2canvas( session_id )
 	
     	get_url_to_ws( function() { init_websocket()
 		
-			setInterval(()=>{document.location.reload(true);},5000*12);
+			setInterval(whenWeWantToDoRefresh,5000);
 		
 		})
 	});
@@ -196,6 +197,9 @@ while (element.firstChild) {
 
  glob_all_collected_stones=[];
  glob_all_generated_stones=[];
+ 
+ 
+ 
 	document.getElementById('canvas0').onclick = function(ev) {
 		
 // //document.getElementById("scale_div").style.border = '';
@@ -214,6 +218,8 @@ while (element.firstChild) {
 	} 
 	
 	
+
+ 
 		var params='md5='+glob_session_id;
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST', global_url_to_glab+'/init_pixels', true);
@@ -289,21 +295,90 @@ while (element.firstChild) {
 								
 							var x = e.offsetX==undefined?e.layerX:e.offsetX;
 							var y = e.offsetY==undefined?e.layerY:e.offsetY;
-													
-							if(is_little_belly(x,y))
-							{
-								glob_little_belly_pressed=true;
+							
+							var params = 'md5='+glob_session_id;
+	
+							var xhr = new XMLHttpRequest();
+							xhr.open('POST', global_url_to_glab+'/get_xy_labirint', true);
+							xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+							xhr.onload = function(e) {  
+						
+								if (xhr.readyState != 4) return;
+							
+								if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; onerror(error); throw new Error(error);  }
 								
+								var obj = JSON.parse(xhr.responseText);
+								glob_x_left_top=Number(obj.x);
+								glob_y_left_top=Number(obj.y);
+								var nn = Number(obj.nn);
+								var n = (x/(10*nn)|0)-7;
+								var m = (y/(10*nn)|0)-7;
+							
+							    glob_x_left_top_last=glob_x_left_top;
+							    glob_y_left_top_last=glob_y_left_top;
+								glob_x_left_top += n;
+								glob_y_left_top += m;
+															
+							// if(is_little_belly(x,y))
+							// {
+								// glob_little_belly_pressed=true;
+								
+							// }
+							
+						
+															
+								if(click_on_white(glob_x_left_top,glob_y_left_top))
+								{
+									doLeftClickOnPixelCanvas(x,y);
+								}
+								else
+								{
+									
+									if(click_near_last_xy())
+									{
+										doLeftClick( glob_x_left_top, glob_y_left_top, function() {
+													
+												send_to_server_changed_canvas( function()  {
+																		
+													
+														document.getElementById("canvas0").onclick = whenBrakabakaEventOccurs;
+														
+														
+														var el = document.getElementById('btn_pixels_clean');
+														el.style.border = "";
+														el.style.visibility='hidden';
+														//el.style.display="none";
+														document.getElementById("scale_div").style.visibility = 'hidden'; //visible
+														//document.getElementById("scale_div").style.display = 'none'; //visible
+														global_do_work=false;
+			
+														
+														
+														
+														
+														setTimeout(	processing_click, 100);
+														
+												});
+										});
+									}
+							
+								}
+								
+								
+
+							
 							}
+							xhr.send(params);
 							
-							doLeftClickOnPixelCanvas(x,y);
 							
-							//pixelsPro_whenClickedOnLabirint(x,y);
+						
 					
 					}
 								
-						
-					var pcnv = document.getElementById("pixels");
+					
+
+
+	var pcnv = document.getElementById("pixels");
 					pcnv.oncontextmenu = function(e)
 					{
 						e.preventDefault();
@@ -355,23 +430,11 @@ while (element.firstChild) {
 					}
 					
 					
+
+
+
 					
-					addStone(
-								
-								function()
-									{
-										getChaosedLabirint(function(){
-											
-											
-											// var coords = get_coordinates_of_stone();
-											// glob_x_left_top=coords[0];
-											// glob_y_left_top=coords[1];
-											// doLeftClickOnPixelCanvas(glob_x_left_top+1,glob_y_left_top);
-											});
-										
-									}
-								
-								);
+					addStone(1, function()	{  getChaosedLabirint( function() { } ) } );
 								
 					
 					
@@ -390,6 +453,22 @@ while (element.firstChild) {
 	
 
 }
+
+
+
+function click_near_last_xy()
+{
+	if((glob_x_left_top==glob_x_left_top_last)&&(glob_y_left_top==glob_y_left_top_last))
+		return false;
+	if(	(Math.abs(glob_x_left_top-glob_x_left_top_last)<=1) && (Math.abs(glob_y_left_top-glob_y_left_top_last)<=1) )
+		return true;
+	
+	return false;
+}
+							
+
+
+
 function doLeftClickOnPixelCanvas(x,y){
 	
 	
@@ -930,33 +1009,7 @@ function pixelsPro_whenRightClickedOnLabirint(x,y)
 				 {
 										
 					
-				var params = 'md5='+glob_session_id;
-				var xhr = new XMLHttpRequest();
-				xhr.open('POST', global_url_to_glab+'/get_collected', true);
-				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-				xhr.onload = function(e) {  
-			
-					if (xhr.readyState != 4) return;
-				
-					if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; onerror(error); throw new Error(error);  }
-					
-					document.getElementById('collected_div').innerHTML = xhr.responseText;
-					var lst = document.getElementById('collected_div').childNodes;
-					for(var i=0;i<lst.length;i++)
-					{
-						lst[i].onclick = selectCollected;
-					}
-					// if(lst[0])selectCollectedOn(lst[0]);
-					
-					
-					if(is_stone(color)&&(is_stone_was_collected(color)==false))
-		
-					{
-						glob_all_collected_stones.push(color);
-					}
-					
-				}
-				xhr.send(params);
+			get_collected_stones_from_server_and_show();
 				
 								
 										
@@ -992,6 +1045,37 @@ function pixelsPro_whenRightClickedOnLabirint(x,y)
 		xhr.send(params);
 
 		
+}
+
+function get_collected_stones_from_server_and_show()
+{
+		var params = 'md5='+glob_session_id;
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', global_url_to_glab+'/get_collected', true);
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				xhr.onload = function(e) {  
+			
+					if (xhr.readyState != 4) return;
+				
+					if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; onerror(error); throw new Error(error);  }
+					
+					document.getElementById('collected_div').innerHTML = xhr.responseText;
+					var lst = document.getElementById('collected_div').childNodes;
+					for(var i=0;i<lst.length;i++)
+					{
+						//lst[i].onclick = selectCollected;
+					}
+					// if(lst[0])selectCollectedOn(lst[0]);
+					
+					
+					// if(is_stone(color)&&(is_stone_was_collected(color)==false))
+		
+					// {
+						// glob_all_collected_stones.push(color);
+					// }
+					
+				}
+				xhr.send(params);
 }
 
 //returns id

@@ -207,6 +207,150 @@ function getSameColorNeighborsPro( global_snake_image_data, color, x, y, dx, dy 
 	
 }
 
+
+
+var global_in_cluster = null;
+var global_border_cluster = null;
+
+//we can faster
+function dummy_pixells(x,y)
+{
+	var arr2_in = [];
+	
+	
+	var canvas2 = document.getElementById("pixels");
+	var context2 = canvas2.getContext("2d");
+	var imgData2 = context2.getImageData(0,0,canvas2.width,canvas2.height);
+	
+	global_snake_image_data = imgData2;
+	
+	var color = getColorArrayFromImageData(imgData2, x, y);
+	
+	global_cell_size = 1;//Number(document.getElementById("cell_size").value);
+	
+	var dx = global_cell_size;
+	var dy = dx;
+	
+	global_in_cluster = [{x:x,y:y,counter:0}];
+	global_border_cluster = [];
+	
+	var exit=false;
+	var nn=0;
+	var repeat = false;
+	
+	while(true)
+	{
+		for(var n=0;n<global_in_cluster.length;n++)
+		{
+			
+			var obj = global_in_cluster[n];
+			if(obj.counter==1) continue;
+			
+			
+			
+			//global_snake_image_data = fillRectangleFast(global_snake_image_data, obj.x, obj.y, dx, dy, color );
+			
+			//context2.fillStyle='rgba('+color[0]+','+color[1]+','+color[2]+','+color[3]/255+')'; 
+			
+			/*
+			context2.fillStyle='black';
+			context2.fillRect(obj.x, obj.y,global_cell_size, global_cell_size);
+			
+			global_snake_image_data = context2.getImageData(0,0,canvas2.width,canvas2.height);
+			*/
+	
+		
+			
+			var arr = getSameColorNeighborsPro( global_snake_image_data, color, obj.x, obj.y, dx, dy );
+			
+			
+			
+			var found=0;
+			for(var i=0;i<arr[0].length;i++)
+			{
+				
+				var ind = getPointIndexInArrayOfObjects(global_in_cluster, arr[0][i]);
+				if(ind==null)
+				{
+					var obj2={};
+					obj2.x=arr[0][i][0];
+					obj2.y=arr[0][i][1];
+					obj2.counter=0;
+					global_in_cluster.push(obj2);
+					
+				}
+
+			}
+			
+			var m = 1;
+			if(arr[1].length==0) m=2;
+			
+			arr2_in.push( [ obj.x, obj.y, m ] );
+			
+			obj.counter=1;
+			
+			
+			global_in_cluster[n]=obj;
+			
+			
+		}
+		
+		repeat = false;
+		for(var i=0;i<global_in_cluster.length;i++)
+		{
+			if(global_in_cluster[i].counter==0)
+			{
+				repeat=true;
+				break;
+			}
+		}
+		
+		if(repeat==true) continue;
+		
+		break;
+
+	}	
+
+	global_in_cluster=[];
+	global_border_cluster=[];
+	
+	for(var i=0;i<arr2_in.length;i++)
+	{
+		if(arr2_in[i][2]==1)
+		{
+			global_in_cluster.push([arr2_in[i][0],arr2_in[i][1]]);
+		}
+		else
+		{
+			global_border_cluster.push([arr2_in[i][0],arr2_in[i][1]]);
+		}
+		
+
+	}
+	
+	return [ global_in_cluster, global_border_cluster ];
+	
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var global_in_cluster = null;
 var global_border_cluster = null;
 

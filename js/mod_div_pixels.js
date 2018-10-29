@@ -154,11 +154,16 @@ function setEventListenersOnTri_Btns()
 			
 			
 			var el = document.getElementById('btn_pixels_clean');
-	el.style.border = "";
-    el.style.visibility='hidden';
-	el.style.display="none";
-	document.getElementById("scale_div").style.visibility = 'hidden'; //visible
+			el.style.border = "";
+			el.style.visibility='hidden';
+			//el.style.display="none";
+			document.getElementById("scale_div").style.visibility = 'hidden'; //visible
+			//document.getElementById("scale_div").style.display = 'none'; //visible
 			global_do_work=false;
+			
+			
+			
+			
 		}
 		var btn = document.getElementById("btn_pixels_save");
 		btn.onclick = function()
@@ -194,6 +199,10 @@ function setEventListenersOnTri_Btns()
 				//alert('Collect all plutonium before. Beware!\n...and tickle my little belly. Do not forget.');
 				return;
 			}
+			
+		
+			
+			
 			
 			
 			 get_neighbours(glob_x_left_top,glob_y_left_top, function( colors ) {
@@ -232,36 +241,38 @@ function setEventListenersOnTri_Btns()
 						var el = document.getElementById('btn_pixels_clean');
 						el.style.border = "";
 						el.style.visibility='hidden';
-						el.style.display="none";
+						//el.style.display="none";
 						document.getElementById("scale_div").style.visibility = 'hidden';
 						
 						//window.open("http://s954447o.bget.ru/labirint");
 						//location.href='http://s954447o.bget.ru/labirint';//?url_for_winner=http://localhost/colors555?session='+md5(session_number_seed);
 						
 						doLeftClick(glob_x_left_top,glob_y_left_top, function() {
-						
-						send_to_server_changed_canvas( function(){//and collected stones to treasure
 							
+							prepare_clean_single_pixels(  function(  ) { 
 							
-								free_prev_labirint( function() {
+								clean_single_pixels( function(  ) { 		
+							
+									send_to_server_changed_canvas( function(){//and collected stones to treasure
+													
+										free_prev_labirint( function() {
 									
-																//	window.location.search = 'reloaded';
-get_last_version_of_pattern( function() { global_do_work=false; 	} );	
+																
+											get_last_version_of_pattern( function() { global_do_work=false; 	} );	
 																
 																//global_do_work=false;
-																//setTimeout(	processing_click, 100);
-													});
+															//setTimeout(	processing_click, 100);
+										});
 								
-									
-									
-									
+									});
+								});
 									
 									
 							});
-							
-					});
-						
-			});
+						});
+				});
+			
+			
 			
 		}
 
