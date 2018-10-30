@@ -1,3 +1,9 @@
+var global_state=null;
+var PAUSED=7;
+var PAUSE_INTERVAL=200;
+var MOTION_ANIMATING=9;
+var MOTION_ANIMATING_PAUSE_INTERVAL=1000;
+
 function wizardry()
 {
 	//alert('OMG! I found a magik stone! \nOk. I\'ll put it in my pocket.\nJump on stone now!');
@@ -108,109 +114,64 @@ function free_prev_labirint( callback )
 }
 
 
-var global_dummy_fast_thread_x=0;
-var global_dummy_fast_thread_y=0;
-var global_dummy_fast_thread_first_x=0;
-var global_dummy_fast_thread_first_y=0;
-var global_dummy_fast_thread_imgData=null;
-var global_dummy_fast_thread_in_cluster=[];
-var global_dummy_fast_thread_border_cluster=[];
-var global_dummy_fast_thread_color=null;
-var global_dummy_fast_thread_arr2_all=[];
-var global_dummy_fast_thread_radius=200;
-var global_dummy_fast_thread_radius_counter=0;
-var global_removed_x_y_obj = {};
 
-function init_dummy_fast_thread()
+function motion_animate(x,y)
 {
-	global_dummy_fast_thread_x=0;
-	global_dummy_fast_thread_y=0;
-	global_dummy_fast_thread_first_x=0;
-	global_dummy_fast_thread_first_y=0;
-	global_dummy_fast_thread_imgData=null;
-	global_dummy_fast_thread_in_cluster=[];
-	global_dummy_fast_thread_border_cluster=[];
-	global_dummy_fast_thread_color=null;
-	global_dummy_fast_thread_arr2_all=[];
-	global_dummy_fast_thread_radius=200;
-	global_dummy_fast_thread_radius_counter=0;
-	global_removed_x_y_obj = {};
-}
-
-function dummy_fast_thread ( callback )
-{
-	if(global_dummy_fast_thread_arr2_all.length==0)
-	{
-		callback();
-		return;
-	}
-	
-	global_dummy_fast_thread_radius_counter++;
-	
-			var M =  getRandomInt(0,global_dummy_fast_thread_arr2_all.length);
-
-	
-			var x = global_dummy_fast_thread_arr2_all[M][0];
-			var y = global_dummy_fast_thread_arr2_all[M][1];
+	global_state=MOTION_ANIMATING;
 			
-			if( global_dummy_fast_thread_radius_counter > global_dummy_fast_thread_radius 
-			//(x>global_dummy_fast_thread_first_x+10)||(x<global_dummy_fast_thread_first_x-10)||
-			//(y>global_dummy_fast_thread_first_y+10)||(y<global_dummy_fast_thread_first_y-10)
-			)
-			{
-				callback();
-				return;
-			}
-			else{
-				
-			var key = ''+x+'_'+y;
-			
-			if( global_removed_x_y_obj [ key ] == undefined )
-			{
-				
-				
-				//context2.fillStyle = 'white'; 
-				//context2.fillRect( x,y, dx, dy );
-				
-				var arr = getSameColorNeighbors0( global_dummy_fast_thread_imgData, global_dummy_fast_thread_color, x, y, 1, 1 );
-				for(var i=0;i<arr[0].length;i++) 
-				{
+			global_dummy_fast_thread_imgData=fillRectangleFast(global_dummy_fast_thread_imgData,x,y,1,1,[255,0,0,255]);
+			//global_fill_color);
+			var canvas7 = document.getElementById("canvas0");
+			var context7 = canvas7.getContext("2d");
 					
-					var x1 = arr[0][i][0];
-					var y1 = arr[0][i][1];
-					
-					global_dummy_fast_thread_arr2_all.push([x1,y1]);
-				}
-				
-				global_removed_x_y_obj [ key ] = true;
-				
-				if(arr[0].length==8)
-					global_dummy_fast_thread_in_cluster.push([x,y]);
-				else 
-					global_dummy_fast_thread_border_cluster.push([x,y]);
-			}
-			
-			}
-			
-			global_dummy_fast_thread_arr2_all.splice(M,1);
+			context7.putImageData(global_dummy_fast_thread_imgData,0,0);	
+		
+	
+	setTimeout( function(){
+		
+		
+		
 			global_dummy_fast_thread_imgData=fillRectangleFast(global_dummy_fast_thread_imgData,x,y,1,1,[255,255,255,255]);//global_fill_color);
-			//global_dummy_fast_thread_imgData
-			
-			if(global_dummy_fast_thread_arr2_all.length==0) {callback();return;}
+			var canvas7 = document.getElementById("canvas0");
+			var context7 = canvas7.getContext("2d");
+					
+			context7.putImageData(global_dummy_fast_thread_imgData,0,0);	
 		
-			else 
-			{
-				var canvas7 = document.getElementById("canvas0");
-				var context7 = canvas7.getContext("2d");
-				
-				context7.putImageData(global_dummy_fast_thread_imgData,0,0);
-				
-				
-				
-				setTimeout( function(){  dummy_fast_thread( callback ) }, 5 );
+			global_state=null;
 		
-			}
+	},MOTION_ANIMATING_PAUSE_INTERVAL/2|0);
 	
+	
+		// var arr=getWHDNeighbors(x,y,1,1);//global_dummy_fast_thread_imgData
+		// for(var j=0;j<arr.length;j++)
+		// {
+			// var x2=arr[j][0];
+			// var y2=arr[j][1];
+			// global_dummy_fast_thread_imgData=fillRectangleFast(global_dummy_fast_thread_imgData,x2,y2,1,1,[0,255,255,255]);//global_fill_color);
+			// var canvas7 = document.getElementById("canvas0");
+			// var context7 = canvas7.getContext("2d");
+					
+			// context7.putImageData(global_dummy_fast_thread_imgData,0,0);	
+		// }
+	
+	// setTimeout( function(){
+		
+		
+		// var arr=getWHDNeighbors(x,y,1,1);//global_dummy_fast_thread_imgData
+		// for(var j=0;j<arr.length;j++)
+		// {
+			// var x2=arr[j][0];
+			// var y2=arr[j][1];
+			// global_dummy_fast_thread_imgData=fillRectangleFast(global_dummy_fast_thread_imgData,x2,y2,1,1,[255,255,255,255]);//global_fill_color);
+			// var canvas7 = document.getElementById("canvas0");
+			// var context7 = canvas7.getContext("2d");
+					
+			// context7.putImageData(global_dummy_fast_thread_imgData,0,0);	
+		// }
+		
+		// global_state=null;
+		
+	// },200);
 }
 
 //-------------------------------------------------------------------
@@ -533,9 +494,16 @@ function pattern2canvas( session_id )
 }
 
 window.addEventListener('error', function (e) {
-    var error = e.error;
-    console.log(error);
-	alert(error);
+	og('in my error handler:');
+    var stack = e.error.stack;
+    var message = e.error.toString();
+    if (stack) {
+        message += '\n' + stack;
+    }
+	og(message);
+    // var xhr = new XMLHttpRequest();
+    // xhr.open('POST', '/log', true);
+    // xhr.send(message);
 });
 
 // function onerror(error)
@@ -1109,44 +1077,48 @@ while (element.firstChild) {
 
 function find_neighbours_by_ulitka(xx,yy)
 {
-	var canvas2 = document.getElementById("canvas0");
-	var context2 = canvas2.getContext("2d");
-var mi=context2.getImageData(0,0,canvas2.width,canvas2.height);
-	var numbers=get_ulitka(xx,yy);
-	numbers.sort(function(a, b) {
-			return a[2] - b[2];
-		});
+	// var canvas2 = document.getElementById("canvas0");
+	// var context2 = canvas2.getContext("2d");
+	// var mi=context2.getImageData(0,0,canvas2.width,canvas2.height);
+	
+	var numbers = get_ulitka(xx,yy);
+	
+	numbers.sort( function(a, b) { return a[2] - b[2]; } );
 		
-		for(var i=0;i<numbers.length;i++)
-		{
-			var x=numbers[i][0];
-			var y=numbers[i][1];
+	return numbers;
+	
+		// var arr=[];
+		
+		// for(var i=0;i<numbers.length;i++)
+		// {
+			// var x=numbers[i][0];
+			// var y=numbers[i][1];
 			
-			// var color = getColorArrayFromImageData(mi,x+glob_x_left_top,y+glob_y_left_top);
+			// // var color = getColorArrayFromImageData(mi,x+glob_x_left_top,y+glob_y_left_top);
 			
 			
-			// var canvas = document.getElementById("canvas0");
-											// var ctx = canvas.getContext("2d");
-											// var im=ctx.getImageData(0,0,canvas.width,canvas.height);
-											// var color =  [255,0,0,255];//getColorArrayFromImageData(imgData0, x, y);
+			// // var canvas = document.getElementById("canvas0");
+			// // var ctx = canvas.getContext("2d");
+			// // var im=ctx.getImageData(0,0,canvas.width,canvas.height);
+			// // var color =  [255,0,0,255];//getColorArrayFromImageData(imgData0, x, y);
 
-											
-											
-											// im=fillRectangleFast(im,x+glob_x_left_top,y+glob_y_left_top,1,1,color);
-											// ctx.putImageData( im,0,0);
 			
 			
-			if(get_near_not_stones(x+glob_x_left_top,y+glob_y_left_top).length>0) {
+			// // im=fillRectangleFast(im,x+glob_x_left_top,y+glob_y_left_top,1,1,color);
+			// // ctx.putImageData( im,0,0);
+			
+			
+			// // if(get_near_not_stones(x+glob_x_left_top,y+glob_y_left_top).length>0) {
 				
-				glob_x_left_top=x+glob_x_left_top;
-				glob_y_left_top=y+glob_y_left_top;
+				// // glob_x_left_top=x+glob_x_left_top;
+				// // glob_y_left_top=y+glob_y_left_top;
 				
-				return true; 
-			}
-			
-		}
+				// // return true; 
+			// // }
+			// arr.push([glob_x_left_top+x,glob_y_left_top+y]);
+		// }
 		
-		return false;
+		// return arr;
 }
 
 // https://renkport.ru/java/primer/zapolnenie-dvumernogo-massiva-po-spirali/
@@ -1595,9 +1567,48 @@ var colors=[];
 								
 }
 
+function is_neighbour_food( arr_i )
+{
+	var canvas = document.getElementById("canvas0");
+	var ctx = canvas.getContext("2d");
+	var im=ctx.getImageData(0,0,canvas.width,canvas.height);
+		
+		var color =  getColorArrayFromImageData(im, arr_i[0], arr_i[1]);
+		if(white(color)) return false;
+		if(red(color)) return false;
+		if(grey(color)) return false;
+		
+	//message here
+				
+	return true;
+	
+}
+
 function get_near_not_stones(x0,y0)
 {	
-var colors=[];
+	//glob_x_left_top=x0;
+	//glob_y_left_top=y0;
+	
+	var r=false;	
+	var xx=0;
+	var yy=0;
+	do 
+	{
+							
+		var arr = get_ulitka(++xx,++yy);
+		for(var i=0;i<arr.length;i++)
+		{
+			var arr2=[arr[i][0]+x0,arr[i][1]+y0];
+			if(is_neighbour_food(arr2)) return arr2;	
+		}	
+		
+		if(	check_all_white()	) throw new Exception("error: all white");
+		
+	}
+	while(true);
+	
+	/***
+		var colors=[];
 		var canvas = document.getElementById("canvas0");
 		var ctx = canvas.getContext("2d");
 		var im=ctx.getImageData(0,0,canvas.width,canvas.height);
@@ -1622,7 +1633,8 @@ var colors=[];
 								
 						}
 					}
-			return colors;					
+			return colors;	
+				****/
 								
 }			
 	
@@ -1727,7 +1739,7 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 		return;
 	} 
 	
-	get_neighbours(x,y);
+	//get_neighbours(x,y);
 			
 	
 	var params = 'md5='+glob_session_id+'&x='+x+'&y='+y;		
@@ -1792,33 +1804,7 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 							 getChaosedLabirint( function()
 				 {
 										
-					
 				
-				// var xhr = new XMLHttpRequest();
-				// xhr.open('GET', global_url_to_glab+'/get_collected', true);
-				// xhr.onload = function(e) {  
-			
-					// if (xhr.readyState != 4) return;
-				
-					// if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; onerror(error); throw new Error(error);  }
-					
-					// document.getElementById('collected_div').innerHTML = xhr.responseText;
-					// var lst = document.getElementById('collected_div').childNodes;
-					// for(var i=0;i<lst.length;i++)
-					// {
-						// lst[i].onclick = selectCollected;
-					// }
-					// // if(lst[0])selectCollectedOn(lst[0]);
-					
-					
-					// if(is_stone(color)&&(is_stone_was_collected(color)==false))
-		
-					// {
-						// glob_all_collected_stones.push(color);
-					// }
-					
-				// }
-				// xhr.send();
 				
 								if(glob_little_belly_pressed)
 								{
@@ -1826,15 +1812,7 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 									btn_pixels_clean();
 								
 								}
-									//if( hfhfbhr44(x,y)) doLeftClick(x,y);//hfhfbhr44(x,y);	
-									//var result_hgb=hfhfbhr44(x,y);
-									
-									
-							//	if(result_hgb ) doLeftClick(result_hgb.f2_x,result_hgb.f2_y,function(){	});	
-							
-						//	if(result_hgb ) labirint(result_hgb.f2_x,result_hgb.f2_y);	
-							
-							
+				
 								});
 			
 			
@@ -1889,6 +1867,7 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 	glob_x_left_top=getRandomInt(0,document.getElementById("canvas0").width);
 	glob_y_left_top=getRandomInt(0,document.getElementById("canvas0").height);
 	glob_tg_id=setInterval(function(){	hfhfbhr44();},500);
+	glob_tg_id2=setInterval(function(){	zala_mander17();},300);
 // }
 // function fryday()
 // {
@@ -2295,54 +2274,6 @@ function pixelsPro_whenClickedOnCollected(el,x,y)
 }
 
 
-function white(color2)
-{
-	var color=[255,255,255,255];
-	if(
-					(color2[0] == color[0]) &&
-					(color2[1] == color[1]) &&
-					(color2[2] == color[2]) &&
-					(color2[3]== color[3])
-					
-		) 
-			{
-				return true;
-			}
-			return false;
-
-}
-function red(color2)
-{
-	var color=[255,0,0,255];
-	if(
-					(color2[0] == color[0]) &&
-					(color2[1] == color[1]) &&
-					(color2[2] == color[2]) &&
-					(color2[3]== color[3])
-					
-		) 
-			{
-				return true;
-			}
-			return false;
-
-}
-function grey(color2)
-{
-	var color=[127,127,127,255];
-	if(
-					(color2[0] == color[0]) &&
-					(color2[1] == color[1]) &&
-					(color2[2] == color[2]) &&
-					(color2[3]== color[3])
-					
-		) 
-			{
-				return true;
-			}
-			return false;
-
-}
 function countDifferColorsOn()
 {
 	var count=0;
@@ -2516,7 +2447,31 @@ var global_fill_color=null;
 function doLeftClick(x,y,callback)
 {
 	 
-	 //if(global_do_work==true) { callback(); return };
+	 if(global_state==PAUSED)
+	 {
+		 setTimeout(function(){global_state=null;
+										doLeftClick(x,y,callback);
+										},PAUSE_INTERVAL);
+			return; 
+	 }
+	 
+		// var r=prompt("conti?","1");
+		// if(r!="1")
+		// {
+			// setTimeout(function(){ doLeftClick(x,y,callback);},10000);
+			// return;
+		// } 
+	 
+	 
+	if(global_do_work==true) {
+
+			global_state=PAUSED;  
+			setTimeout(function(){
+				global_state=null;
+										doLeftClick(x,y,callback);
+										},PAUSE_INTERVAL);
+			return; 
+	}
 	
 	global_do_work=true;
 	 
@@ -2554,7 +2509,7 @@ function doLeftClick(x,y,callback)
 					//if(arr[0].length==0) { callback(); return; }
 					global_fill_color=getRndColor();
 
-							
+				
 							
 					dummy_fast_thread (   function()   {
 							
@@ -2868,6 +2823,13 @@ function construct_params()
 	return 'md5='+glab_labirint_params.glob_session_id+'&x='+glab_labirint_params.x+'&y='+glab_labirint_params.y+'&scale_koeficient='+glab_labirint_params.scale_koeficient+'&num_of_strawbery='+glab_labirint_params.wh;	
 }
 
+function exit(num,msg)
+{
+	localStorage.setItem('was exit',''+num);
+	localStorage.setItem('err_msg',''+msg);
+	location.reload();
+}
+
 function whenBrakabakaEventOccurs(e)
 {
 		e.preventDefault();
@@ -2971,117 +2933,6 @@ function whenBrakabakaEventOccurs(e)
 
 }
 
-function hfhfbhr44(x,y)
-{
-	og('in hfhfbhr44: x='+x+',y='+y);
-	if((x==undefined)&&(y==undefined))
-	{ 
-		x=glob_x_left_top;
-		y=glob_y_left_top;
-	}
-	
-	var colors = get_near_not_stones(x,y);
-	og('in hfhfbhr44: '+ colors);
-	
-	if(colors.length>0)
-	{
-		
-			 glob_x_left_top=colors[0][0];
-			 glob_y_left_top=colors[0][1];
-			
-		 // setTimeout(function(){	
-		 
-				doLeftClick(glob_x_left_top,glob_y_left_top);
-			//	whenUserLeftClickOnPixels(glob_x_left_top,glob_y_left_top);
-				
-				 // setTimeout(  
-				 
-				 
-				 // function(){	 
-				 
-				 
-				// var result_hgb= hfhfbhr44(glob_x_left_top,glob_y_left_top);
-				// if(result_hgb!=null)
-							// whenUserLeftClickOnPixels(result_hgb.f2_x,result_hgb.f2_y);
-
-				
-
-
-
-
-				 // },200);
-					
-					// send_to_server_changed_canvas(
-				
-					 // function(){//and collected stones to treasure
-													
-										// free_prev_labirint( function() {
-									
-																
-											// get_last_version_of_pattern( function() { 
-
-												// setTimeout(function(){	 
-								 
-								 // var f1_x = glob_x_left_top+getRandomInt(0,20)-10;
-								 // var f1_y = glob_y_left_top+ getRandomInt(0,20)-10;
-								
-								// var result_hgb=hfhfbhr44(f1_x,f1_y);
-
-
-											// } , 200);	
-																
-																// //global_do_work=false;
-															// //setTimeout(	processing_click, 100);
-										// });
-								
-									// });
-					
-				// });
-				
-				
-				
-				 // }
-				 
-				 
-				 // },100);
-				
-		 // },100);
-		 // return null;
-	}
-	else{
-	
-				glob_x_left_top=x;
-				glob_y_left_top=y;
-				var r=false;	
-				
-						var xx=0;var yy=0;
-						do {
-							r=find_neighbours_by_ulitka(++xx,++yy);
-							
-							
-							
-							//labirint(glob_x_left_top,glob_y_left_top);
-							if(r) break;
-						}
-						while(true);
-										
-						//	save();									
-						if(r)//	labirint(glob_x_left_top,glob_y_left_top);	
-						{
-							//glob_x_left_top=
-							//glob_y_left_top
-							// var result_hgb=hfhfbhr44(f1_x,f1_y);
-							// if(result_hgb ) doLeftClick(result_hgb.f2_x,result_hgb.f2_y, function(){			});
-							//return {f2_x:glob_x_left_top,f2_y:glob_y_left_top};
-						}
-						else 
-						{
-							//return null;//labirint(x,y);
-							send_to_server_changed_canvas( function(){			});
-						}
-	}
-
-}
 
 // window.onload = function()
 // {
@@ -3137,7 +2988,7 @@ function hfhfbhr44(x,y)
 	
 	for(var ind=0;ind<imgData0.data.length;ind+=4)
 	{
-		var color0 = mod_triple_getColorArrayFromImageDataByIndex(ind);
+		var color0 = mod_triple_getColorArrayFromImageDataByIndex(imgData0,ind);
 		if(white(color0)==false)return false;
 	}
 	return true;
