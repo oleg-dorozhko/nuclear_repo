@@ -1866,8 +1866,10 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 // {
 	glob_x_left_top=getRandomInt(0,document.getElementById("canvas0").width);
 	glob_y_left_top=getRandomInt(0,document.getElementById("canvas0").height);
-	glob_tg_id=setInterval(function(){	hfhfbhr44();},500);
-	glob_tg_id2=setInterval(function(){	zala_mander17();},300);
+	glob_tg_id=setInterval(function(){	hfhfbhr44(undefined,undefined,zala_mander17);	},2000);
+	//glob_tg_id2=setInterval(function(){},4000);
+	glob_tg_id4=setInterval(free_creatures,7000);
+	
 // }
 // function fryday()
 // {
@@ -3429,7 +3431,12 @@ function generatePackOfMMMColors()
 	
 	
 }
-
+ function free_creatures()
+ {
+	 mod_salamander_global_state=null;
+	 mod_triton_global_state=null;
+	// global_state=null;
+ }
 
 function getMappedCanvas()
 {

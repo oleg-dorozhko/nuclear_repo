@@ -4,7 +4,7 @@ var TRITON_WORKS=247;
 var TRITON_WORKS_PAUSE_INTERVAL=5000;
 var TRITON_MOTION_ANIMATING=409;
 var TRITON_MOTION_ANIMATING_PAUSE_INTERVAL=500;
-
+var mod_triton_global_state=null;
 var mod_triton_global_dummy_fast_thread_x=0;
 var mod_triton_global_dummy_fast_thread_y=0;
 var mod_triton_global_dummy_fast_thread_first_x=0;
@@ -16,11 +16,15 @@ var mod_triton_global_dummy_fast_thread_color=null;
 var mod_triton_global_dummy_fast_thread_arr2_all=[];
 var mod_triton_global_dummy_fast_thread_radius=200;
 var mod_triton_global_dummy_fast_thread_radius_counter=0;
+var mod_triton_global_need_white_point_array=[];
 var mod_triton_global_removed_x_y_obj = {};
 var mod_triton_x;
 var mod_triton_y;
+var mod_triton_global_fill_color=[0,255,255,255]; //seawave
+
 function mod_triton_init_dummy_fast_thread()
 {
+	mod_triton_global_state=null;
 	mod_triton_global_dummy_fast_thread_x=0;
 	mod_triton_global_dummy_fast_thread_y=0;
 	mod_triton_global_dummy_fast_thread_first_x=0;
@@ -32,17 +36,18 @@ function mod_triton_init_dummy_fast_thread()
 	mod_triton_global_dummy_fast_thread_arr2_all=[];
 	mod_triton_global_dummy_fast_thread_radius=200;
 	mod_triton_global_dummy_fast_thread_radius_counter=0;
+	mod_triton_global_need_white_point_array=[];
 	mod_triton_global_removed_x_y_obj = {};
 }
 
 function mod_triton_dummy_fast_thread ( callback )
 {
-	if(global_state==TRITON_MOTION_ANIMATING)
-	{
-		 setTimeout(function(){  mod_triton_dummy_fast_thread ( callback )},TRITON_MOTION_ANIMATING_PAUSE_INTERVAL);
-		 return;
+	// if(global_state==TRITON_MOTION_ANIMATING)
+	// {
+		 // setTimeout(function(){  mod_triton_dummy_fast_thread ( callback )},TRITON_MOTION_ANIMATING_PAUSE_INTERVAL);
+		 // return;
 	 
-	}
+	// }
 	
 	if(mod_triton_global_dummy_fast_thread_arr2_all.length==0)
 	{
@@ -98,10 +103,11 @@ function mod_triton_dummy_fast_thread ( callback )
 			}
 			
 			mod_triton_global_dummy_fast_thread_arr2_all.splice(M,1);
-			mod_triton_global_dummy_fast_thread_imgData=mod_triton_fillRectangleFast(mod_triton_global_dummy_fast_thread_imgData,x,y,1,1,[255,255,255,255]);//mod_triton_global_fill_color);
+			mod_triton_global_dummy_fast_thread_imgData=mod_triton_fillRectangleFast(mod_triton_global_dummy_fast_thread_imgData,x,y,1,1,mod_triton_global_fill_color);//mod_triton_global_fill_color);
 			
+			mod_triton_global_need_white_point_array.push([x,y]);
 			
-			mod_triton_motion_animate(x,y);
+			setTimeout( mod_triton_motion_animate, 500 );
 			
 			
 			if(mod_triton_global_dummy_fast_thread_arr2_all.length==0) {callback();return;}
@@ -125,29 +131,51 @@ function mod_triton_dummy_fast_thread ( callback )
 
 function mod_triton_motion_animate(x,y)
 {
-	global_state=TRITON_MOTION_ANIMATING;
+	
+	if(mod_triton_global_state==TRITON_MOTION_ANIMATING) return;
+	mod_triton_global_state=TRITON_MOTION_ANIMATING;
+	
+	while(	mod_triton_global_need_white_point_array.length>0)
+	{
+		var xy = mod_triton_global_need_white_point_array.shift();
+		var x = xy[0];
+		var y = xy[1];
+		mod_triton_global_dummy_fast_thread_imgData=mod_triton_fillRectangleFast(mod_triton_global_dummy_fast_thread_imgData,x,y,1,1,[255,255,255,255]);
+		var canvas7 = document.getElementById("canvas0");
+		var context7 = canvas7.getContext("2d");
+		context7.putImageData(mod_triton_global_dummy_fast_thread_imgData,0,0);	
+	
+		
+	}
+	mod_triton_global_state=null;
+	
+	
+	
+	
+	
+	// global_state=TRITON_MOTION_ANIMATING;
 			
-			mod_triton_global_dummy_fast_thread_imgData=mod_triton_fillRectangleFast(mod_triton_global_dummy_fast_thread_imgData,x,y,1,1,[0,255,255,255]);
-			//global_fill_color);
-			var canvas7 = document.getElementById("canvas0");
-			var context7 = canvas7.getContext("2d");
+			// mod_triton_global_dummy_fast_thread_imgData=mod_triton_fillRectangleFast(mod_triton_global_dummy_fast_thread_imgData,x,y,1,1,[0,255,255,255]);
+			// //global_fill_color);
+			// var canvas7 = document.getElementById("canvas0");
+			// var context7 = canvas7.getContext("2d");
 					
-			context7.putImageData(mod_triton_global_dummy_fast_thread_imgData,0,0);	
+			// context7.putImageData(mod_triton_global_dummy_fast_thread_imgData,0,0);	
 		
 	
-	setTimeout( function(){
+	// setTimeout( function(){
 		
 		
 		
-			mod_triton_global_dummy_fast_thread_imgData=mod_triton_fillRectangleFast(mod_triton_global_dummy_fast_thread_imgData,x,y,1,1,[255,255,255,255]);//global_fill_color);
-			var canvas7 = document.getElementById("canvas0");
-			var context7 = canvas7.getContext("2d");
+			// mod_triton_global_dummy_fast_thread_imgData=mod_triton_fillRectangleFast(mod_triton_global_dummy_fast_thread_imgData,x,y,1,1,[255,255,255,255]);//global_fill_color);
+			// var canvas7 = document.getElementById("canvas0");
+			// var context7 = canvas7.getContext("2d");
 					
-			context7.putImageData(mod_triton_global_dummy_fast_thread_imgData,0,0);	
+			// context7.putImageData(mod_triton_global_dummy_fast_thread_imgData,0,0);	
 		
-			global_state=null;
+			// global_state=null;
 		
-	},TRITON_MOTION_ANIMATING_PAUSE_INTERVAL/2|0);
+	// },TRITON_MOTION_ANIMATING_PAUSE_INTERVAL/2|0);
 	
 	
 
@@ -156,17 +184,17 @@ function mod_triton_motion_animate(x,y)
  function mod_triton_left_click(x,y,callback)
  {
   
-	if(global_state==PAUSED_BY_TRITON)
-	{
-		setTimeout( function() {
+	// if(global_state==PAUSED_BY_TRITON)
+	// {
+		// setTimeout( function() {
 			 
-			global_state=null;
-			mod_triton_left_click(x,y,callback);
+			// global_state=null;
+			// mod_triton_left_click(x,y,callback);
 		
-		},PAUSE_TRITON_INTERVAL );
+		// },PAUSE_TRITON_INTERVAL );
 			
-		return; 
-	}
+		// return; 
+	// }
 	 
 		// var r=prompt("conti?","1");
 		// if(r!="1")
@@ -176,19 +204,19 @@ function mod_triton_motion_animate(x,y)
 		// } 
 	 
 	 
-	if(global_state==TRITON_WORKS) {
+	// if(global_state==TRITON_WORKS) {
 
 			
-			setTimeout(function(){
+			// setTimeout(function(){
 				
-				global_state=null;
-				mod_triton_left_click(x,y,callback);
+				// global_state=null;
+				// mod_triton_left_click(x,y,callback);
 				
-										},TRITON_WORKS_PAUSE_INTERVAL);
-			return; 
-	}
+										// },TRITON_WORKS_PAUSE_INTERVAL);
+			// return; 
+	// }
 	
-	global_state=TRITON_WORKS;
+	// global_state=TRITON_WORKS;
 	 
 
 	 //get color from cnv7
@@ -222,7 +250,7 @@ function mod_triton_motion_animate(x,y)
 					//var arr = getSameColorNeighbors0( global_dummy_fast_thread_imgData, global_dummy_fast_thread_color, x, y, 1, 1 );
 							
 					//if(arr[0].length==0) { callback(); return; }
-					mod_triton_global_fill_color=getRndColor();
+					//mod_triton_global_fill_color=mod_triton_getRndColor();
 
 				
 							
@@ -235,9 +263,9 @@ function mod_triton_motion_animate(x,y)
 							mod_triton_global_dummy_fast_thread_border_cluster.push([x,y]);
 							mod_triton_post_bubabu(mod_triton_global_dummy_fast_thread_border_cluster,[255,255,255,255]);//global_fill_color); 
 
-							global_state=null;
+						//	global_state=null;
 						
-						//	callback();
+							callback();
 										
 										
 					} );
@@ -246,17 +274,19 @@ function mod_triton_motion_animate(x,y)
  
  
 
-function hfhfbhr44(x,y)
+function hfhfbhr44(x,y,callback)
 {
 	
 	if(global_state!=null) return;
+	global_state=TRITON_WORKS;
+	
 	// og('in hfhfbhr44: x='+x+',y='+y);
 	if((x==undefined)&&(y==undefined))
 	{ 
 		if((mod_triton_x==undefined)&&(mod_triton_y==undefined))
 		{
-			x=getRandomInt(0,document.getElementById("canvas0").width);
-			y=getRandomInt(0,document.getElementById("canvas0").height);
+			x=mod_triton_getRandomInt(0,document.getElementById("canvas0").width);
+			y=mod_triton_getRandomInt(0,document.getElementById("canvas0").height);
 			
 		}
 		else
@@ -270,7 +300,8 @@ function hfhfbhr44(x,y)
 	mod_triton_y=y;
 	
 	var colors = mod_triton_get_near_not_stones(x,y);
-	og('in hfhfbhr44: '+ colors);
+	
+	//og('in hfhfbhr44: '+ colors);
 	// exit(1000,JSON.stringify(colors));
 	
 	
@@ -280,7 +311,20 @@ function hfhfbhr44(x,y)
 		x=colors[0];
 		y=colors[1];
 		
-		mod_triton_left_click(x,y);
+		mod_triton_left_click(x,y, function(){
+			
+			global_state=null;
+			callback();
+			
+			
+		});
+		
+		
+	}
+	else
+	{
+		global_state=null;
+		callback();
 		
 	}
 	
@@ -564,14 +608,13 @@ function mod_triton_is_neighbour_food( arr_i )
 		if(mod_triton_white(color)) return false;
 		if(mod_triton_red(color)) return false;
 		if(mod_triton_grey(color)) return false;
+		if(mod_triton_seawave(color)) return false;
 		
 	//message here
 				
 	return true;
 	
 }
-
-
 
 
 function mod_triton_white(color2)
@@ -590,7 +633,22 @@ function mod_triton_white(color2)
 			return false;
 
 }
+function mod_triton_seawave(color2)
+{
+	var color=[0,255,255,255];
+	if(
+					(color2[0] == color[0]) &&
+					(color2[1] == color[1]) &&
+					(color2[2] == color[2]) &&
+					(color2[3]== color[3])
+					
+		) 
+			{
+				return true;
+			}
+			return false;
 
+}
 function mod_triton_red(color2)
 {
 	var color=[255,0,0,255];
@@ -779,6 +837,16 @@ function mod_triton_getColorArrayFromImageDataByIndex(imgData0, idx)
 		arr0[3] = imgData0.data[idx+3];	
 		
 		return arr0;
+}
+function mod_triton_getRndColor()
+{
+	var r = mod_triton_getRandomInt(0, 256);
+	var g = mod_triton_getRandomInt(0, 256);
+	var b = mod_triton_getRandomInt(0, 256);
+	var a = 255;
+	
+	return [r,g,b,a];
+	
 }
 
 
