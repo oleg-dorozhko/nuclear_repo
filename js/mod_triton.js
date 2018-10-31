@@ -107,7 +107,7 @@ function mod_triton_dummy_fast_thread ( callback )
 			
 			mod_triton_global_need_white_point_array.push([x,y]);
 			
-			setTimeout( mod_triton_motion_animate, 500 );
+			setTimeout( mod_triton_motion_animate, 200 );
 			
 			
 			if(mod_triton_global_dummy_fast_thread_arr2_all.length==0) {callback();return;}
@@ -121,7 +121,7 @@ function mod_triton_dummy_fast_thread ( callback )
 				
 				
 				
-				setTimeout( function(){  mod_triton_dummy_fast_thread( callback ) }, 5 );
+				setTimeout( function(){  mod_triton_dummy_fast_thread( callback ) }, 200 );
 				
 			}
 	

@@ -1866,9 +1866,10 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 // {
 	glob_x_left_top=getRandomInt(0,document.getElementById("canvas0").width);
 	glob_y_left_top=getRandomInt(0,document.getElementById("canvas0").height);
-	glob_tg_id=setInterval(function(){	hfhfbhr44(undefined,undefined,zala_mander17);	},2000);
+	glob_tg_id = setInterval( 	zala_mander17, 500 );
+	//glob_tg_id=setInterval(function(){	hfhfbhr44(undefined,undefined,zala_mander17);	},2000);
 	//glob_tg_id2=setInterval(function(){},4000);
-	glob_tg_id4=setInterval(free_creatures,7000);
+	//glob_tg_id4=setInterval(free_creatures,7000);
 	
 // }
 // function fryday()
@@ -2847,6 +2848,28 @@ function whenBrakabakaEventOccurs(e)
 		//get x y
 		var x = e.offsetX==undefined?e.layerX:e.offsetX;
 		var y = e.offsetY==undefined?e.layerY:e.offsetY;
+		if(global_state==null)
+		{
+			mod_salamander_setXY(x,y);
+			return;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		return;
+		
+		
 		
 		
 		var canvas0 = document.getElementById("canvas0");
@@ -2854,46 +2877,46 @@ function whenBrakabakaEventOccurs(e)
 		
 		var imgData0 = context0.getImageData(0,0,canvas0.width,canvas0.height);
 		var _color= getColorArrayFromImageData(imgData0, x, y);
-		var bgcolor = global_bgcolor;
+		// var bgcolor = global_bgcolor;
 		
-		if( (bgcolor[0]==_color[0]) && (bgcolor[1]==_color[1]) && (bgcolor[2]==_color[2]) && (bgcolor[3]==_color[3]) ) 
-		{
+		// if( (bgcolor[0]==_color[0]) && (bgcolor[1]==_color[1]) && (bgcolor[2]==_color[2]) && (bgcolor[3]==_color[3]) ) 
+		// {
 			
 				
 				
-										get_neighbours(x,y, function( colors ) {
-											console.log("colors.length="+colors.length);
+										// get_neighbours(x,y, function( colors ) {
+											// console.log("colors.length="+colors.length);
 			
 			
 			/***/
-			if((global_cliked_points_array.length==0)&&(global_do_work==false)&&(colors.length>0))
-			{
-				//global_do_work=true;
-				//repeat();
-				labirint(x,y);
+			// if((global_cliked_points_array.length==0)&&(global_do_work==false)&&(colors.length>0))
+			// {
+				// //global_do_work=true;
+				// //repeat();
+				// labirint(x,y);
 				
-				return;
-			}
-			else{
+				// return;
+			// }
+			// else{
 				
-				//if(hfhfbhr44(x,y)) doLeftClick(x,y);
-				//var result_hgb=hfhfbhr44(x,y);
-				//if(result_hgb ) doLeftClick(result_hgb.f2_x,result_hgb.f2_y,function(){	});
-				//if(result_hgb ) labirint(result_hgb.f2_x,result_hgb.f2_y);						
+				// //if(hfhfbhr44(x,y)) doLeftClick(x,y);
+				// //var result_hgb=hfhfbhr44(x,y);
+				// //if(result_hgb ) doLeftClick(result_hgb.f2_x,result_hgb.f2_y,function(){	});
+				// //if(result_hgb ) labirint(result_hgb.f2_x,result_hgb.f2_y);						
 									
 									
 							
 				
-			}
-										});
-			/***/
+			// }
+										// });
+			// /***/
 			
-			return;
-		}
+			// return;
+		// }
 		
 		
 		
-		document.getElementById("canvas0").oncontextmenu = ctrlz;
+		//document.getElementById("canvas0").oncontextmenu = ctrlz;
 		
 		
 		
@@ -2926,12 +2949,12 @@ function whenBrakabakaEventOccurs(e)
 	
 	canvas1.id='move_'+x+'_'+y;
 	
-	canvas1.onclick = processing_click;
+	//canvas1.onclick = processing_click;
 	//canvas1.oncontextmenu = ctrlz;
 	document.getElementById("moves").appendChild(canvas1);
 	
 		
-	processing_click();
+	//processing_click();
 
 }
 
