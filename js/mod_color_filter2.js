@@ -484,11 +484,11 @@ function pattern2canvas( session_id )
 	
 	getChaosedLabirint(  function() { 
 	
-    	get_url_to_ws( function() { init_websocket()
+    	// get_url_to_ws( function() { init_websocket()
 		
-			setInterval(whenWeWantToDoRefresh,5000);
+			// // setInterval(whenWeWantToDoRefresh,5000);
 		
-		})
+		// })
 	});
 	
 }
@@ -2552,7 +2552,24 @@ function click_on_white(x,y)
 
 function ctrlz(e)
 {
-	//e.preventDefault();
+	
+	var canvas0 = document.getElementById("canvas0");
+		var context0 = canvas0.getContext("2d");
+		
+		var imgData0 = context0.getImageData(0,0,canvas0.width,canvas0.height);
+		var _color= getColorArrayFromImageData(imgData0, x, y);
+		
+		if(is_white(_color)) 
+		{
+			
+			return;
+		}
+		
+		e.preventDefault();
+	mod_salamander_set_global_fill_color();
+	
+	
+	
 	return;
 	
 		if(global_do_work==true) return;
@@ -2833,6 +2850,23 @@ function exit(num,msg)
 	location.reload();
 }
 
+function is_white(color2)
+{
+	var color=[255,255,255,255];
+	if(
+					(color2[0] == color[0]) &&
+					(color2[1] == color[1]) &&
+					(color2[2] == color[2]) &&
+					(color2[3]== color[3])
+					
+		) 
+			{
+				return true;
+			}
+			return false;
+
+}
+
 function whenBrakabakaEventOccurs(e)
 {
 		e.preventDefault();
@@ -2848,11 +2882,13 @@ function whenBrakabakaEventOccurs(e)
 		//get x y
 		var x = e.offsetX==undefined?e.layerX:e.offsetX;
 		var y = e.offsetY==undefined?e.layerY:e.offsetY;
-		if(global_state==null)
-		{
-			mod_salamander_setXY(x,y);
-			return;
-		}
+		
+		
+		
+		// if(global_state==null)
+		// {
+			// mod_salamander_setXY(x,y);
+		// }
 		
 		
 		
@@ -2861,13 +2897,6 @@ function whenBrakabakaEventOccurs(e)
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		return;
 		
 		
 		
@@ -2877,13 +2906,32 @@ function whenBrakabakaEventOccurs(e)
 		
 		var imgData0 = context0.getImageData(0,0,canvas0.width,canvas0.height);
 		var _color= getColorArrayFromImageData(imgData0, x, y);
-		// var bgcolor = global_bgcolor;
 		
-		// if( (bgcolor[0]==_color[0]) && (bgcolor[1]==_color[1]) && (bgcolor[2]==_color[2]) && (bgcolor[3]==_color[3]) ) 
+		// if(is_white(_color)) 
 		// {
+			// context0.fillStyle='#ffffff';
+			// context0.beginPath();
+			// context0.arc(x,y,5,0,2*Math.PI);
+			// context0.fill();
+			// mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
+			// return;
+		// }
+		
+		
+		mod_salamander_stop();
+		
+		context0.fillStyle='#ffffff';
+			context0.beginPath();
+			context0.arc(mod_salamandra_x,mod_salamandra_y,5,0,2*Math.PI);
+			context0.fill();
+			mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
+		
+		
+		//mod_salamander_setXY(x,y);
+		global_state=null;
+		return;
+		
 			
-				
-				
 										// get_neighbours(x,y, function( colors ) {
 											// console.log("colors.length="+colors.length);
 			
@@ -2911,13 +2959,8 @@ function whenBrakabakaEventOccurs(e)
 										// });
 			// /***/
 			
-			// return;
-		// }
-		
-		
-		
-		//document.getElementById("canvas0").oncontextmenu = ctrlz;
-		
+			return;
+		//}
 		
 		
 		
@@ -3408,12 +3451,12 @@ function shuffle(a) {
 
 function whenWeWantToDoRefresh()
 {
-	if(global_do_work==true) { global_time_is_now=0; return; }
+	// if(global_do_work==true) { global_time_is_now=0; return; }
 	
-	setTimeout(()=>{
-		global_time_is_now += 1;
-		if(global_time_is_now>60) { global_time_is_now=0; document.location.reload(true); }
-	},20000);
+	// setTimeout(()=>{
+		// global_time_is_now += 1;
+		// if(global_time_is_now>60) { global_time_is_now=0; document.location.reload(true); }
+	// },20000);
 }
 function generatePackOfMMMColors()
 {
