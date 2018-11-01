@@ -2866,6 +2866,15 @@ function is_white(color2)
 			return false;
 
 }
+setInterval(call_salamandra, 500);
+function call_salamandra()
+{
+	var fake_event={};
+	fake_event.preventDefault=function(){};
+	fake_event.offsetX=getRandomInt(1,document.getElementById("canvas0").width-1);
+	fake_event.offsetY=getRandomInt(1,document.getElementById("canvas0").height-1);
+	whenBrakabakaEventOccurs(fake_event);
+}
 
 function whenBrakabakaEventOccurs(e)
 {

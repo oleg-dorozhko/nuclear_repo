@@ -321,7 +321,7 @@ function  mod_salamander_generate_xy()
 	mod_salamandra_x=mod_salamander_getRandomInt(1,document.getElementById("canvas0").width-1);
 	mod_salamandra_y=mod_salamander_getRandomInt(1,document.getElementById("canvas0").height-1);
 	
-	if(!mod_salamander_white(mod_salamander_getColorArrayFromImageData(im,mod_salamandra_x,mod_salamandra_y))) break;
+	if(mod_salamander_white(mod_salamander_getColorArrayFromImageData(im,mod_salamandra_x,mod_salamandra_y))==false) break;
 	
 	}
 	while(true);
@@ -370,7 +370,10 @@ function zala_mander17(x,y)
 	mod_salamandra_x=x;
 	mod_salamandra_y=y;
 	
-	
+	if(mod_salamandra_x<5) mod_salamander_generate_xy();
+	if(mod_salamandra_y<5) mod_salamander_generate_xy();
+	x=mod_salamandra_x;
+	y=mod_salamandra_y;
 	var bgcolor = mod_salamander_getColorArrayFromImageData(mod_salamander_global_dummy_fast_thread_imgData, x, y);
 	mod_salamander_global_dummy_fast_thread_color = bgcolor;
 	
