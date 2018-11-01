@@ -4,7 +4,7 @@ var SALAMANDER_WORKS=47;
 var SALAMANDER_WORKS_PAUSE_INTERVAL=5000;
 var SALAMANDER_MOTION_ANIMATING=429;
 var SALAMANDER_MOTION_ANIMATING_PAUSE_INTERVAL=500;
-var SALAMANDER_MOTION_VELOCITY=100;
+var SALAMANDER_MOTION_VELOCITY=50;
 
 var	mod_salamandra_x;
 var	mod_salamandra_y;
@@ -36,7 +36,7 @@ function mod_salamander_init_dummy_fast_thread()
 	mod_salamander_global_dummy_fast_thread_border_cluster=[];
 	//mod_salamander_global_dummy_fast_thread_color=null;
 	mod_salamander_global_dummy_fast_thread_arr2_all=[];
-	mod_salamander_global_dummy_fast_thread_radius=200;
+	mod_salamander_global_dummy_fast_thread_radius+=5;//=200;
 	mod_salamander_global_dummy_fast_thread_radius_counter=0;
 	mod_salamander_global_removed_x_y_obj = {};
 	mod_salamander_global_need_white_point_array = [];
@@ -120,7 +120,9 @@ function mod_salamander_dummy_fast_thread ( callback )
 				mod_salamander_putImageData2canvas0(mod_salamander_global_dummy_fast_thread_imgData);
 				
 				
-				setTimeout( function(){  mod_salamander_dummy_fast_thread( callback ) }, SALAMANDER_MOTION_VELOCITY );
+				setTimeout( function(){ 
+				mod_salamander_dummy_fast_thread( callback )
+				}, SALAMANDER_MOTION_VELOCITY );
 				
 		//	}
 	
@@ -138,13 +140,15 @@ function mod_salamander_motion_animate(x1,y1)
 	
 	// while(	mod_salamander_global_need_white_point_array.length>0)
 	// {
+	//	alert();
 		
 		//var xy = mod_salamander_global_need_white_point_array.shift();
 		//var x = xy[0];
 		//var y = xy[1];
 		mod_salamander_setXY(x1,y1);
 		mod_salamander_global_dummy_fast_thread_imgData=mod_salamander_fillRectangleFast(mod_salamander_global_dummy_fast_thread_imgData,x1,y1,1,1,[255,255,255,255]);
-		mod_salamander_putImageData2canvas0(mod_salamander_global_dummy_fast_thread_imgData);
+		mod_salamander_putImageData2canvas0_PRO_(x1,y1,[255,255,255,255]);
+		// mod_salamander_putImageData2canvas0(mod_salamander_global_dummy_fast_thread_imgData);
 //	}
 	
 	
@@ -212,8 +216,8 @@ function mod_salamander_motion_animate(x1,y1)
 		
 					mod_salamander_init_dummy_fast_thread();
 						
-					mod_salamander_global_dummy_fast_thread_arr2_all = [[x,y,1]];
-
+					//mod_salamander_global_dummy_fast_thread_arr2_all = [[x,y,1]];
+					mod_salamander_global_dummy_fast_thread_arr2_all.push([x,y,1]);
 					
 					//mod_salamander_global_dummy_fast_thread_imgData =imgData7;// imgData9;
 					
@@ -258,7 +262,7 @@ function mod_salamander_motion_animate(x1,y1)
 							// }
 						// //	global_state=null;
 						
-						// callback();
+						 callback();
 										
 										
 					} );
@@ -312,9 +316,18 @@ function mod_salamander_motion_animate(x1,y1)
 	
 	return result_arr;
  }
+ 
+ function mod_salamander_magnit_xy()
+ {
+	 var xy=get_mod_salamandra_xy_so_smescheniem(mod_salamandra_x,mod_salamandra_y)
+	 mod_salamandra_x=xy[0];
+	mod_salamandra_y=xy[1];
+	
+ }
+ 
 function  mod_salamander_generate_xy()
 {
-
+//alert();
 	var im=mod_salamander_global_dummy_fast_thread_imgData;
 	do{
 		
@@ -362,6 +375,7 @@ function zala_mander17(x,y)
 		}
 		else
 		{
+			mod_salamander_magnit_xy();
 			x=mod_salamandra_x;
 			y=mod_salamandra_y;
 		}
@@ -691,6 +705,24 @@ function mod_salamander_getColorArrayFromImageData(imgData0, x, y)
 		
 		return arr0;
 }
+
+
+
+
+
+
+function mod_salamander_putImageData2canvas0_PRO_(x1,y1,color)
+{
+	var canvas2 = document.getElementById("canvas0");
+	var context2 = canvas2.getContext("2d");	
+	var im=context2.getImageData(x1,y1,1,1);
+	im.data[0]=color[0];
+	im.data[1]=color[1];
+	im.data[2]=color[2];
+	im.data[3]=color[3];
+	context2.putImageData(im,x1,y1);
+}
+
 ///////////////////////////////////////////////////////////////////////////
 //////////////// PROBLEM HERE! WE NEED COMBO HERE /////////////////////////
 ////////////////////////////////////////////////////////////////////////////
@@ -715,9 +747,9 @@ function mod_salamander_post_bubabu(arr,color)
 		var y=arr[j][1];
 			
 		im = mod_salamander_fillRectangleFast(im, x, y, 1, 1, color);	
-			
+		mod_salamander_putImageData2canvas0_PRO_(	x,y,color);
 	}
-	mod_salamander_putImageData2canvas0(im);
+	//mod_salamander_putImageData2canvas0(im);
 	
 }
 //////////////////////////////////////////////////////////////////////

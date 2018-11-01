@@ -2866,7 +2866,7 @@ function is_white(color2)
 			return false;
 
 }
-setInterval(call_salamandra, 500);
+ setInterval(call_salamandra, 500);
 function call_salamandra()
 {
 	var fake_event={};
@@ -2876,6 +2876,24 @@ function call_salamandra()
 	whenBrakabakaEventOccurs(fake_event);
 }
 
+var global_was_user_click=null;
+var global_number_of_user_clicks_from_last_tick=0;
+function get_number_of_user_clicks_from_last_tick()
+{
+		var n=global_number_of_user_clicks_from_last_tick;
+		//global_number_of_user_clicks_from_last_tick=0;
+		return n;
+}
+function get_mod_salamandra_xy_so_smescheniem(mod_salamandra_x,mod_salamandra_y)
+{
+	var xy=global_was_user_click;
+	if(xy[0]>mod_salamandra_x)mod_salamandra_x+=5;
+	else if(xy[0]<mod_salamandra_x)mod_salamandra_x-=5;
+	if(xy[1]>mod_salamandra_y)mod_salamandra_y+=5;
+	else if(xy[1]<mod_salamandra_y)mod_salamandra_y-=5;
+	return [mod_salamandra_x,mod_salamandra_y];
+	global_was_user_click=null;
+}
 function whenBrakabakaEventOccurs(e)
 {
 		e.preventDefault();
@@ -2891,8 +2909,8 @@ function whenBrakabakaEventOccurs(e)
 		//get x y
 		var x = e.offsetX==undefined?e.layerX:e.offsetX;
 		var y = e.offsetY==undefined?e.layerY:e.offsetY;
-		
-		
+		global_was_user_click=[x,y];
+		global_number_of_user_clicks_from_last_tick++;
 		
 		// if(global_state==null)
 		// {
@@ -2929,10 +2947,10 @@ function whenBrakabakaEventOccurs(e)
 		
 		mod_salamander_stop();
 		
-		context0.fillStyle='#ffffff';
-			context0.beginPath();
-			context0.arc(mod_salamandra_x,mod_salamandra_y,5,0,2*Math.PI);
-			context0.fill();
+		// context0.fillStyle='#ffffff';
+			// context0.beginPath();
+			// context0.arc(mod_salamandra_x,mod_salamandra_y,1,0,2*Math.PI);
+			// context0.fill();
 			mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
 		
 		
