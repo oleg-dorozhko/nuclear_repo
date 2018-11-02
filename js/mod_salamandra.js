@@ -328,13 +328,15 @@ function mod_salamander_motion_animate(x1,y1)
 function  mod_salamander_generate_xy()
 {
 //alert();
+	var counter=0;
 	var im=mod_salamander_global_dummy_fast_thread_imgData;
 	do{
 		
 	mod_salamandra_x=mod_salamander_getRandomInt(1,document.getElementById("canvas0").width-1);
 	mod_salamandra_y=mod_salamander_getRandomInt(1,document.getElementById("canvas0").height-1);
-	
+	counter++;
 	if(mod_salamander_white(mod_salamander_getColorArrayFromImageData(im,mod_salamandra_x,mod_salamandra_y))==false) break;
+	if(counter>10000) break;
 	
 	}
 	while(true);
@@ -392,7 +394,7 @@ function zala_mander17(x,y)
 	mod_salamander_global_dummy_fast_thread_color = bgcolor;
 	
 	
-	
+	try{
 	var colors = mod_salamander_get_near_not_stones(x,y);
 	//og('in zala_mander17: '+ colors);
 	// exit(1000,JSON.stringify(colors));
@@ -413,6 +415,15 @@ function zala_mander17(x,y)
 	else{
 		global_state=null;
 				
+	}
+	} 
+	catch (e) {
+  
+		if(e.message=="error: all white")
+		{
+			localStorage.removeItem('last_session_md5');
+			save_all_settings_on_server(function(){location.reload();});
+		}
 	}
 }
 
@@ -975,7 +986,10 @@ function mod_salamander_get_ulitka(m,n) {
 		//console.log(""+arr3);
 		return arr3;
  }
-
+function UserException(message) {
+   this.message = message;
+   
+}
 function mod_salamander_get_near_not_stones(x0,y0)
 {	
 	
@@ -992,7 +1006,7 @@ function mod_salamander_get_near_not_stones(x0,y0)
 			if(mod_salamander_is_neighbour_food(arr2)) return arr2;	
 		}	
 		
-		if(	mod_salamander_check_all_white()	) throw new Exception("error: all white");
+		if(	mod_salamander_check_all_white()	) throw new UserException("error: all white");
 		
 	}
 	while(true);

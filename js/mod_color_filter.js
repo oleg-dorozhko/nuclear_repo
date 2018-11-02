@@ -121,6 +121,7 @@ function loadJSON(path, success, error)
 
 window.onload = function()
 {
+	
 	var err = localStorage.getItem('was exit');
 	if(err!=null)
 	{
@@ -138,7 +139,7 @@ window.onload = function()
 	
 	loadJSON('security/fileNo2469.json', function(data) { console.log(data); 
 	
-	loadHTML( data.password_level, function() { call_f777( 'js/mod_color_filter2.js', function(){ initGame(); } ); } );
+	loadHTML( data.password_level, function() { call_f777( 'js/mod_color_filter2.js', function(){ setInterval(agni, 3000); initGame(); } ); } );
 	
 	}, function(xhr) { console.error(xhr); 
 	

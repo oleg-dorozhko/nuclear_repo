@@ -478,12 +478,13 @@ var glob_player_settings_id=null;
 var glob_little_belly_pressed=false;
 var glob_x_left_top_last=0;
 var glob_y_left_top_last=0;
-function pattern2canvas( session_id )
+function pattern2canvas( session_id)
 {
 	glob_session_id = session_id;
 	
 	getChaosedLabirint(  function() { 
 	
+		entering_to_magik_world();
     	// get_url_to_ws( function() { init_websocket()
 		
 			// // setInterval(whenWeWantToDoRefresh,5000);
@@ -514,7 +515,11 @@ window.addEventListener('error', function (e) {
 
 function get_session_id(callback)
 {
+	//yet, here, we need check free localStorage access yet
+	var last_session_md5 = localStorage.getItem('last_session_md5');
 	var params='md5=new';
+	if( last_session_md5 != null ) params='md5='+last_session_md5;
+	
 
 	try
 	{
@@ -817,7 +822,10 @@ function ident2(im, action, callback)
 
 function send_to_server_changed_canvas( callback )
 {
-		
+		mod_salamander_stop	();
+		global_state=ALL_PROCESSES_SLEEP_FOR_SERVER;
+		filtering_tiles();
+		localStorage.removeItem('last_session_md5');
 	//arrayBufferFromCanvasToServer('canvas0', global_url_to_glab+'/blob_to_server_and_echo_from_server', callback, onerror);
 	//arrayBufferFromCanvasToServer('canvas0', global_url_to_glab+'/test245', callback, onerror);
 	var canvas = document.getElementById('canvas0');
@@ -849,9 +857,56 @@ function send_to_server_changed_canvas( callback )
 				
 				if (xhr2.readyState != 4) return;
 
-				if (xhr2.status != 200) {  var error = xhr2.status + ': ' + xhr2.statusText+': '+xhr2.response; if(onerror) onerror(error); return; }
+				if (xhr2.status != 200) { 	var error = xhr2.status + ': ' + xhr2.statusText+': '+xhr2.response; if(onerror) onerror(error); return; }
 				
+				if(xhr2.responseText.indexOf('get_chaosed_labirint:error: may be white')===0)
+				{
+					
+					
+					var params='md5=new';
+					var xhr = new XMLHttpRequest();
+		
+					xhr.open('POST', global_url_to_glab+'/get_labirint_id', true);
+					
+					xhr.onload = function(e) {  
+
+						if (xhr.readyState != 4) return;
+						
+						if (xhr.status != 200) {  var error = xhr.status + ': ' + xhr.statusText+': '+xhr.response; if(onerror)onerror(error); throw new Error(error);  }
+						
+						glob_session_id = xhr.responseText;
+	
+						getChaosedLabirint(  function() { 
+						var canvas0 = document.getElementById("canvas0");
+		var context0 = canvas0.getContext("2d");
+		mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
+	
+							global_state=null;
+							
+						});	
+											
+						
+						
+						
+					}
+					
+					xhr.send(params);
+				}
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					//o( function(){ pattern2canvas(  callback ); } );
+					
 				
+				else
 				//is_server_buzzy(function(){
 					callback();
 				//	});
@@ -1073,6 +1128,18 @@ while (element.firstChild) {
 	
 	
 
+}
+
+
+function save_all_settings_on_server(callback)
+{
+	global_state=ALL_PROCESSES_SLEEP_FOR_SERVER;
+	localStorage.setItem('last_session_md5', glob_session_id);
+	setTimeout( function() {filtering_tiles();
+	send_to_server_changed_canvas(function(){
+		console.log('settings saved');
+		global_state=null;
+	});},2000);
 }
 
 function find_neighbours_by_ulitka(xx,yy)
@@ -1506,7 +1573,11 @@ function getChaosedLabirint(callback)
 					canvas.width = newImg.width;
 					canvas.height = newImg.height;
 					ctx.drawImage(newImg, 0, 0,canvas.width,canvas.height);
-					
+					ctx.fillStyle='white';
+					ctx.fillRect(0,0,5,canvas.height);
+					ctx.fillRect(0,0,canvas.width,5);
+					ctx.fillRect(canvas.width-5,0,5,canvas.height);
+					ctx.fillRect(0,canvas.height-5,canvas.width,5);
 					get_array_of_all_generated_stones( function() { if(callback) callback(); }	);
 					
 					//getPassColor();
@@ -1686,6 +1757,69 @@ function get_neighbours(x,y,callback)
 				}
 				xhr.send(params);
 }	
+
+function fake_whenBrakabakaEventOccurs(e)
+{
+
+		e.preventDefault();
+		if(global_state==ALL_PROCESSES_SLEEP_FOR_SERVER) return;
+		// if(isExistAnyNotRemovedClusters()==false)
+		// {
+			// //do_server_query();
+			// location.reload();
+		// }
+		
+	if(global_cliked_points_array.length>MAX_CHARGE) return;
+	
+		//get x y
+		var x = e.offsetX==undefined?e.layerX:e.offsetX;
+		var y = e.offsetY==undefined?e.layerY:e.offsetY;
+	//	global_was_user_click=[x,y];
+	//	global_number_of_user_clicks_from_last_tick++;
+		
+		// if(global_state==null)
+		// {
+			// mod_salamander_setXY(x,y);
+		// }
+		
+		
+		
+		
+		var canvas0 = document.getElementById("canvas0");
+		var context0 = canvas0.getContext("2d");
+		
+	//	var imgData0 = context0.getImageData(0,0,canvas0.width,canvas0.height);
+		// var _color= getColorArrayFromImageData(imgData0, x, y);
+		
+		// if(is_white(_color)) 
+		// {
+			// context0.fillStyle=getStrColorFromRGBAArray(getRndColor());
+			// context0.beginPath();
+			// context0.arc(x,y,3,0,2*Math.PI);
+			// context0.fill();
+		// }
+			// mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
+			// return;
+		// }
+		
+		
+		mod_salamander_stop();
+		
+		// context0.fillStyle='#ffffff';
+			// context0.beginPath();
+			// context0.arc(mod_salamandra_x,mod_salamandra_y,1,0,2*Math.PI);
+			// context0.fill();
+			mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
+		
+		
+		//mod_salamander_setXY(x,y);
+		global_state=null;
+		
+		
+}
+		
+			
+	
 		
 function mod_labirint_compareColors(color,color2)
 {
@@ -1861,12 +1995,21 @@ function pixelsPro_whenClickedOnLabirint(x,y)
 
 		
 }
-// var glob_tg_id=null;
-// function hearth()
-// {
+//global_state=
+var ALL_PROCESSES_SLEEP_FOR_SERVER=501;
+
+function entering_to_magik_world()
+{
 	glob_x_left_top=getRandomInt(0,document.getElementById("canvas0").width);
 	glob_y_left_top=getRandomInt(0,document.getElementById("canvas0").height);
 	glob_tg_id = setInterval( 	zala_mander17, 500 );
+	glob_tg_id2 = setInterval( 	save_all_settings_on_server, 1000*60*1 );
+}
+
+// var glob_tg_id=null;
+// function hearth()
+// {
+	
 	//glob_tg_id=setInterval(function(){	hfhfbhr44(undefined,undefined,zala_mander17);	},2000);
 	//glob_tg_id2=setInterval(function(){},4000);
 	//glob_tg_id4=setInterval(free_creatures,7000);
@@ -1937,8 +2080,13 @@ function initGame()
 	document.getElementById("canvas0").onclick = whenBrakabakaEventOccurs;
 	document.getElementById("canvas0").oncontextmenu = ctrlz;
 	
-	get_session_id( pattern2canvas );
 	
+	loadJSON('security/fileNo2469.json', function(data) { 
+		console.log(data); 
+		global_url_to_glab = data.global_url_to_glab;
+		global_url_to_ws = data.global_url_to_ws;
+		get_session_id( pattern2canvas );
+	});
 
 }
 	
@@ -2193,6 +2341,10 @@ function selectCollected()
 	
 }
 
+function getStrColorFromRGBAArray(data)
+{
+	return "rgba("+data[0]+','+data[1]+','+data[2]+','+data[3]/255+')';
+}
 
 function pixelsPro_whenClickedOnCollected(el,x,y)
 {
@@ -2552,7 +2704,10 @@ function click_on_white(x,y)
 
 function ctrlz(e)
 {
-	
+	if(global_state==ALL_PROCESSES_SLEEP_FOR_SERVER) return;
+		var x = e.offsetX==undefined?e.layerX:e.offsetX;
+		var y = e.offsetY==undefined?e.layerY:e.offsetY;
+		
 	var canvas0 = document.getElementById("canvas0");
 		var context0 = canvas0.getContext("2d");
 		
@@ -2575,8 +2730,6 @@ function ctrlz(e)
 		if(global_do_work==true) return;
 	
 		global_do_work=true;
-			var x = e.offsetX==undefined?e.layerX:e.offsetX;
-		var y = e.offsetY==undefined?e.layerY:e.offsetY;
 		
 		
 		
@@ -2866,14 +3019,48 @@ function is_white(color2)
 			return false;
 
 }
- setInterval(call_salamandra, 500);
+
+function filtering_tiles()
+{
+	
+	var canvas7 = document.getElementById("canvas0");
+	var context7 = canvas7.getContext("2d");
+	var result_png = context7.getImageData(0,0,canvas7.width,canvas7.height);
+	
+	
+			for(var j=0;j<result_png.height;j++)
+			{
+				for(var i=0;i<result_png.width;i++)
+				{
+					
+						
+						var idx = result_png.width * j + i << 2;
+						var color = [
+							result_png.data[idx],	result_png.data[idx+1],	result_png.data[idx+2],	result_png.data[idx+3]
+						];
+							
+							var c_a = !mod_salamander_isColor_mod_salamander_global_fill_color(color,mod_salamander_global_fill_color);
+							result_png.data[idx] = (c_a)? result_png.data[idx]: 255;
+							result_png.data[idx+1] = (c_a)? result_png.data[idx+1]: 255;
+							result_png.data[idx+2] = (c_a)? result_png.data[idx+2]: 255;
+							result_png.data[idx+3] = (c_a)? result_png.data[idx+3]: 255;
+					
+						
+				}
+			}
+			
+			context7.putImageData(result_png,0,0);
+					
+					
+}
+
 function call_salamandra()
 {
 	var fake_event={};
 	fake_event.preventDefault=function(){};
 	fake_event.offsetX=getRandomInt(1,document.getElementById("canvas0").width-1);
 	fake_event.offsetY=getRandomInt(1,document.getElementById("canvas0").height-1);
-	whenBrakabakaEventOccurs(fake_event);
+	fake_whenBrakabakaEventOccurs(fake_event);
 }
 
 var global_was_user_click=null;
@@ -2886,6 +3073,10 @@ function get_number_of_user_clicks_from_last_tick()
 }
 function get_mod_salamandra_xy_so_smescheniem(mod_salamandra_x,mod_salamandra_y)
 {
+	if(global_was_user_click==null)
+	{
+		return [mod_salamandra_x,mod_salamandra_y];
+	}
 	var xy=global_was_user_click;
 	if(xy[0]>mod_salamandra_x)mod_salamandra_x+=5;
 	else if(xy[0]<mod_salamandra_x)mod_salamandra_x-=5;
@@ -2894,9 +3085,18 @@ function get_mod_salamandra_xy_so_smescheniem(mod_salamandra_x,mod_salamandra_y)
 	return [mod_salamandra_x,mod_salamandra_y];
 	global_was_user_click=null;
 }
+
+
 function whenBrakabakaEventOccurs(e)
 {
+	
+	
+	
 		e.preventDefault();
+		
+		if(global_state==ALL_PROCESSES_SLEEP_FOR_SERVER) return;
+		
+		
 		
 		// if(isExistAnyNotRemovedClusters()==false)
 		// {
@@ -2905,28 +3105,12 @@ function whenBrakabakaEventOccurs(e)
 		// }
 		
 	if(global_cliked_points_array.length>MAX_CHARGE) return;
-	
+		mod_salamander_stop();
 		//get x y
 		var x = e.offsetX==undefined?e.layerX:e.offsetX;
 		var y = e.offsetY==undefined?e.layerY:e.offsetY;
 		global_was_user_click=[x,y];
 		global_number_of_user_clicks_from_last_tick++;
-		
-		// if(global_state==null)
-		// {
-			// mod_salamander_setXY(x,y);
-		// }
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		var canvas0 = document.getElementById("canvas0");
 		var context0 = canvas0.getContext("2d");
@@ -2934,33 +3118,73 @@ function whenBrakabakaEventOccurs(e)
 		var imgData0 = context0.getImageData(0,0,canvas0.width,canvas0.height);
 		var _color= getColorArrayFromImageData(imgData0, x, y);
 		
-		// if(is_white(_color)) 
+		if(is_white(_color)) 
+		{
+			clear_riffle();
+		
+				
+				
+			
+		}
+		else	if(global_number_of_user_clicks_from_last_tick>5)
+			{
+			context0.fillStyle=getStrColorFromRGBAArray([255,255,255,255]);
+			context0.beginPath();
+			context0.arc(x,y,5,0,2*Math.PI);
+			context0.fill();
+	 mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
+	global_number_of_user_clicks_from_last_tick=0;
+	
+	clear_riffle();
+	
+			}else riffle_charge(x,y,_color);
+		// if(global_state==null)
 		// {
-			// context0.fillStyle='#ffffff';
-			// context0.beginPath();
-			// context0.arc(x,y,5,0,2*Math.PI);
-			// context0.fill();
-			// mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
-			// return;
+			// mod_salamander_setXY(x,y);
 		// }
 		
-		
-		mod_salamander_stop();
-		
-		// context0.fillStyle='#ffffff';
-			// context0.beginPath();
-			// context0.arc(mod_salamandra_x,mod_salamandra_y,1,0,2*Math.PI);
-			// context0.fill();
-			mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
+		//global_state=ALL_PROCESSES_SLEEP_FOR_SERVER;
 		
 		
-		//mod_salamander_setXY(x,y);
 		global_state=null;
+		
 		return;
+			
+			
+		// var canvas0 = document.getElementById("canvas0");
+		// var context0 = canvas0.getContext("2d");
+		
+		// var imgData0 = context0.getImageData(0,0,canvas0.width,canvas0.height);
+		// var _color= getColorArrayFromImageData(imgData0, x, y);
+		
+		// if(is_white(_color)) 
+		// {
+			// context0.fillStyle=getStrColorFromRGBAArray(getRndColor());
+			// context0.beginPath();
+			// context0.arc(x,y,2,0,2*Math.PI);
+			// context0.fill();
+		// }
+			// // mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
+			// // return;
+		// // }
+		
+		
+		
+		
+		// // context0.fillStyle='#ffffff';
+			// // context0.beginPath();
+			// // context0.arc(mod_salamandra_x,mod_salamandra_y,1,0,2*Math.PI);
+			// // context0.fill();
+			// mod_salamander_global_dummy_fast_thread_imgData = context0.getImageData(0,0,canvas0.width,canvas0.height);
+		
+		
+		// //mod_salamander_setXY(x,y);
+		// global_state=null;
+		// return;
 		
 			
-										// get_neighbours(x,y, function( colors ) {
-											// console.log("colors.length="+colors.length);
+										// // get_neighbours(x,y, function( colors ) {
+											// // console.log("colors.length="+colors.length);
 			
 			
 			/***/
@@ -2991,8 +3215,36 @@ function whenBrakabakaEventOccurs(e)
 		
 		
 		
-		
-		
+	
+	//processing_click();
+
+}
+
+function clear_riffle()
+{
+	
+	global_number_of_user_clicks_from_last_tick=0;
+			var el = document.getElementById("moves");
+			while(el.hasChildNodes()  )
+			{
+				var canvas1 = el.childNodes[0];
+										if(canvas1!=null)
+										{
+											document.getElementById("moves").removeChild(canvas1);
+											sound();
+											
+										}
+										
+			//	el.removeChild(el.childNodes[0]);
+			}
+			
+
+			global_cliked_points_array.length=[];
+}
+				
+	
+		function riffle_charge(x,y,_color)
+		{
 		
 		
 		global_cliked_points_array.push([x,y]);
@@ -3001,8 +3253,8 @@ function whenBrakabakaEventOccurs(e)
 			
 			
 	var canvas1 = document.createElement("canvas");
-	canvas1.width=32;
-	canvas1.height=32;
+	canvas1.width=8;
+	canvas1.height=8;
 	var context1 = canvas1.getContext("2d");
 	var imgData1 = context1.getImageData(0,0,canvas1.width,canvas1.height);
 	
@@ -3010,7 +3262,7 @@ function whenBrakabakaEventOccurs(e)
 	
 	
 	
-	imgData1=fillRectangleFast(imgData1,0,0,32,32,_color);
+	imgData1=fillRectangleFast(imgData1,0,0,8,8,_color);
 	context1.putImageData(imgData1,0,0);
 	
 	
@@ -3022,12 +3274,8 @@ function whenBrakabakaEventOccurs(e)
 	//canvas1.onclick = processing_click;
 	//canvas1.oncontextmenu = ctrlz;
 	document.getElementById("moves").appendChild(canvas1);
-	
+		}
 		
-	//processing_click();
-
-}
-
 
 // window.onload = function()
 // {
@@ -3524,11 +3772,17 @@ function generatePackOfMMMColors()
 	
 	
 }
+
+function agni()
+{
+	setInterval(call_salamandra, 500);
+}
+
  function free_creatures()
  {
 	 mod_salamander_global_state=null;
 	 mod_triton_global_state=null;
-	// global_state=null;
+	global_state=null;
  }
 
 function getMappedCanvas()
