@@ -1655,6 +1655,22 @@ function is_neighbour_food( arr_i )
 	
 }
 
+function is_white(color2)
+{
+	var color=[255,255,255,255];
+	if(
+					(color2[0] == color[0]) &&
+					(color2[1] == color[1]) &&
+					(color2[2] == color[2]) &&
+					(color2[3]== color[3])
+					
+		) 
+			{
+				return true;
+			}
+			return false;
+
+}
 function get_near_not_stones(x0,y0)
 {	
 	//glob_x_left_top=x0;
@@ -3054,6 +3070,16 @@ function filtering_tiles()
 					
 }
 
+function get_first_moves_child_xy_array()
+{
+	if(document.getElementById("moves").childNodes.length>0)
+	{
+		var arr = document.getElementById("moves").childNodes[0].id.split('_');
+		return [Number(arr[1]),Number(arr[2])];
+	}
+	return null;
+}
+
 function call_salamandra()
 {
 	var fake_event={};
@@ -3073,17 +3099,35 @@ function get_number_of_user_clicks_from_last_tick()
 }
 function get_mod_salamandra_xy_so_smescheniem(mod_salamandra_x,mod_salamandra_y)
 {
+	
+	
 	if(global_was_user_click==null)
 	{
+		
 		return [mod_salamandra_x,mod_salamandra_y];
 	}
+	
+	var canvas0 = document.getElementById("canvas0");
+	var context0 = canvas0.getContext("2d");
 	var xy=global_was_user_click;
+		
+	var rc = get_near_first_non_white(context0,xy[0],xy[1]);
+	if(rc==null)
+	{
+		var el= document.getElementById("move_"+xy[0]+'_'+xy[1]);
+		document.getElementById("moves").removeChild(el);
+		global_was_user_click=get_first_moves_child_xy_array();
+		
+		return [mod_salamandra_x,mod_salamandra_y];
+	}
+	
+	
 	if(xy[0]>mod_salamandra_x)mod_salamandra_x+=5;
 	else if(xy[0]<mod_salamandra_x)mod_salamandra_x-=5;
 	if(xy[1]>mod_salamandra_y)mod_salamandra_y+=5;
 	else if(xy[1]<mod_salamandra_y)mod_salamandra_y-=5;
 	return [mod_salamandra_x,mod_salamandra_y];
-	global_was_user_click=null;
+	
 }
 
 
@@ -3116,9 +3160,9 @@ function whenBrakabakaEventOccurs(e)
 		var context0 = canvas0.getContext("2d");
 		
 		var imgData0 = context0.getImageData(0,0,canvas0.width,canvas0.height);
-		var _color= getColorArrayFromImageData(imgData0, x, y);
-		
-		if(is_white(_color)) 
+		var _color= get_near_first_non_white(context0,x,y); //getColorArrayFromImageData(imgData0, x, y);
+		if(_color==null)_color=[255,255,255,255];
+		if(is_white(_color)&&all_white_arround(context0, x, y)) 
 		{
 			clear_riffle();
 		
@@ -3126,7 +3170,7 @@ function whenBrakabakaEventOccurs(e)
 				
 			
 		}
-		else	if(global_number_of_user_clicks_from_last_tick>5)
+		else	if(global_number_of_user_clicks_from_last_tick>500)
 			{
 			context0.fillStyle=getStrColorFromRGBAArray([255,255,255,255]);
 			context0.beginPath();
@@ -3218,6 +3262,28 @@ function whenBrakabakaEventOccurs(e)
 	
 	//processing_click();
 
+}
+
+function all_white_arround(context0,x,y)
+{
+	var imgData0 = context0.getImageData(x-1,y-1,3,3);
+	for(var ind=0;ind<imgData0.data.length;ind+=4)
+	{
+		var color0 = mod_triple_getColorArrayFromImageDataByIndex(imgData0,ind);
+		if(is_white(color0)==false)return false;
+	}
+	return true;
+}
+
+function get_near_first_non_white(context0,x,y)
+{
+	var imgData0 = context0.getImageData(x-1,y-1,3,3);
+	for(var ind=0;ind<imgData0.data.length;ind+=4)
+	{
+		var color0 = mod_triple_getColorArrayFromImageDataByIndex(imgData0,ind);
+		if(is_white(color0)==false) return color0;
+	}
+	return null;
 }
 
 function clear_riffle()
