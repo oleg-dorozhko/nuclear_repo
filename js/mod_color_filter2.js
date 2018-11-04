@@ -1785,7 +1785,7 @@ function fake_whenBrakabakaEventOccurs(e)
 			// location.reload();
 		// }
 		
-	if(global_cliked_points_array.length>MAX_CHARGE) return;
+	//if(global_cliked_points_array.length>MAX_CHARGE) return;
 	
 		//get x y
 		var x = e.offsetX==undefined?e.layerX:e.offsetX;
@@ -2018,6 +2018,10 @@ function entering_to_magik_world()
 {
 	glob_x_left_top=getRandomInt(0,document.getElementById("canvas0").width);
 	glob_y_left_top=getRandomInt(0,document.getElementById("canvas0").height);
+	
+	mod_salamandra_x=document.getElementById('canvas0').width/2;
+	mod_salamandra_y=document.getElementById('canvas0').height/2;
+	
 	glob_tg_id = setInterval( 	zala_mander17, 500 );
 	glob_tg_id2 = setInterval( 	save_all_settings_on_server, 1000*60*1 );
 }
@@ -3115,6 +3119,7 @@ function get_mod_salamandra_xy_so_smescheniem(mod_salamandra_x,mod_salamandra_y)
 	if(rc==null)
 	{
 		var el= document.getElementById("move_"+xy[0]+'_'+xy[1]);
+		if(el!=null)
 		document.getElementById("moves").removeChild(el);
 		global_was_user_click=get_first_moves_child_xy_array();
 		
@@ -3148,7 +3153,7 @@ function whenBrakabakaEventOccurs(e)
 			// location.reload();
 		// }
 		
-	if(global_cliked_points_array.length>MAX_CHARGE) return;
+	//if(global_cliked_points_array.length>MAX_CHARGE) return;
 		mod_salamander_stop();
 		//get x y
 		var x = e.offsetX==undefined?e.layerX:e.offsetX;
@@ -3313,7 +3318,7 @@ function clear_riffle()
 		{
 		
 		
-		global_cliked_points_array.push([x,y]);
+		//global_cliked_points_array.push([x,y]);
 			
 			
 			
@@ -3325,7 +3330,7 @@ function clear_riffle()
 	var imgData1 = context1.getImageData(0,0,canvas1.width,canvas1.height);
 	
 	
-	
+	mod_salamander_global_target_color=_color;
 	
 	
 	imgData1=fillRectangleFast(imgData1,0,0,8,8,_color);
